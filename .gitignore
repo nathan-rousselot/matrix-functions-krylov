@@ -8,3 +8,7 @@ paper/matrix-functions.fdb_latexmk
 paper/matrix-functions.fls
 paper/matrix-functions.log
 paper/matrix-functions.synctex.gz
+paper/matrix-functions.bbl
+paper/matrix-functions.bcf
+paper/matrix-functions.blg
+paper/matrix-functions.run.xml

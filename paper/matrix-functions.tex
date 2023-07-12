@@ -14,8 +14,11 @@
 \usepackage{float}
 \usepackage[ruled,vlined,linesnumbered,algo2e]{algorithm2e}
 \usepackage{amsmath,amssymb}
+\usepackage{amsthm}
 \usepackage{makecell}
 \usepackage{tikz}
+\usepackage[style=authoryear, backend=biber]{biblatex}
+\bibliography{bibliography.bib}
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
    \node[shape=circle,draw=red,inner sep=1pt] (char) {#1};}}
 \setlength\parindent{0pt} %% Do not touch this
@@ -61,4 +64,39 @@ It is not immediate how one would approach this function with a matrix. We want 
 \begin{equation}
     f(\mathbf{A}) := q(\mathbf{A})^{-1}p(\mathbf{A})
 \end{equation}
+However, this is not well defined if $q(\mathbf{A})$ is singular. In other words, we need to make sure that $q(\mathbf{A})$ is invertible. This is the case if and only if $q(\lambda) \neq 0$ for all eigenvalues $\lambda$ of $\mathbf{A}$. This is a very strong condition, and it is not always possible to find a rational function $f$ such that $q(\lambda) \neq 0$ for all eigenvalues $\lambda$ of $\mathbf{A}$. Furthermore, there is an ambiguity in the definition of $f(\mathbf{A})$ as one could want to express $f(\mathbf{A}) := p(\mathbf{A})q(\mathbf{A})^{-1}$ instead. Indeed, in matrix computations, multiplication is not (necessarly) commutative. Thus, in some cases, $q(\mathbf{A})^{-1}p(\mathbf{A}) \neq p(\mathbf{A})q(\mathbf{A})^{-1}$.
+\begin{theorem}
+    Let $p:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$ and $q:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$ be two polynomial functions of degree $d$. Then, if $q(\mathbf{A})$ is non-singular, and if $p(\mathbf{A})$ and $q(\mathbf{A})$ commute, then $f(\mathbf{A}) := q(\mathbf{A})^{-1}p(\mathbf{A}) = p(\mathbf{A})q(\mathbf{A})^{-1}$.
+\end{theorem}
+\begin{proof}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ be a matrix such that $q(\mathbf{A})$ is non-singular, and such that $p(\mathbf{A})$ and $q(\mathbf{A})$ commute. Then, we have:
+    \begin{align*}
+        q(\mathbf{A})^{-1}p(\mathbf{A}) = q(\mathbf{A})^{-1}p(\mathbf{A})q(\mathbf{A})q(\mathbf{A})^{-1} \\
+        = q(\mathbf{A})^{-1}q(\mathbf{A})p(\mathbf{A})q(\mathbf{A})^{-1} \\
+        = p(\mathbf{A})q(\mathbf{A})^{-1}
+    \end{align*}
+\end{proof}
+
+\subsection*{Power Series}
+Let $f:\mathbb{C}\rightarrow\mathbb{C}$ be a function that can be expressed as a power series:
+\begin{equation}
+    f(t) = \sum_{k=0}^\infty c_k t^k
+\end{equation}
+Then, considering a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, and posing $\mathbf{A}^0 = I_n$, we can define the power series function $f:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$ on a matrix $\mathbf{A}$ as follows:
+\begin{equation}
+    f(\mathbf{A}) = \sum_{k=0}^\infty c_k \mathbf{A}^k
+\end{equation}
+In the scalar case, we know that the power series converges if $|t| < r$, where $r$ is the radius of convergence. Obviously this translates in the matrix power series
+\begin{theorem}\label{th:power_convergence}
+    Let $f:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$ be a matrix power series. Then, the series converges if and only if $\rho(\mathbf{A}) < r$, where $\rho(\mathbf{A})$ is the spectral radius of $\mathbf{A}$, and $r$ is the radius of convergence of the scalar power series.
+\end{theorem}
+Proof is provided in \cite{frommer2008matrix}. In the case of a finite-order Laurent Series, \textit{i.e}:
+\begin{equation}
+    f(t) = \sum_{k=-d}^d c_k t^k
+\end{equation}
+For the matrix case, we need to ensure convergence (similarly to power series), but also ensure existance of the inverse, as Laurent series do have negative powers. If both of those conditions are satisfied, we can write the Laurent series as a matrix function:
+\begin{equation}
+    f(\mathbf{A}) = \sum_{k=-d}^d c_k \mathbf{A}^k
+\end{equation}
+\printbibliography
 \end{document}
