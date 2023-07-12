@@ -1,0 +1,64 @@
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Problem Set/Assignment Template to be used by the
+%% Food and Resource Economics Department - IFAS
+%% University of Florida's graduates.
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Version 1.0 - November 2019
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Ariel Soto-Caro
+%%  - asotocaro@ufl.edu
+%%  - arielsotocaro@gmail.com
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt]{article}
+\usepackage{float}
+\usepackage[ruled,vlined,linesnumbered,algo2e]{algorithm2e}
+\usepackage{amsmath,amssymb}
+\usepackage{makecell}
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+   \node[shape=circle,draw=red,inner sep=1pt] (char) {#1};}}
+\setlength\parindent{0pt} %% Do not touch this
+\DeclareMathOperator{\phiAb}{\phi_{A,\mathbf{b}}}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+%% -----------------------------
+%% TITLE
+%% -----------------------------
+\title{Matrix functions} %% Assignment Title
+\author{Nathan Rousselot\\Mathematical Engineering Department\\KU Leuven}
+%% Change "\today" by another date manually
+%% -----------------------------
+%% -----------------------------
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%\setlength{\droptitle}{-5em}    
+%% %%%%%%%%%%%%%%%%%%%%%%%%%
+\maketitle
+
+\section{Introduction}
+In this document we introduce the notion of matrix functions. Say we have a function $f:\mathbb{C}\rightarrow\mathbb{C}$, then we can define the function $f$ on a matrix $\mathbf{A}$ as follows: $f:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$. In the following, we will first provide some theretical background on matrix function. The, we will describe the numerical issues coming with manipulating matrix functions. Finally, we will provide algorithm for efficient computation of matrix fuctions.
+
+\section{Theoretical background}
+\subsection*{Polynomial functions}
+Let $p:\mathbb{C}\rightarrow\mathbb{C}$ be a polynomial function of degree $d$:
+\begin{equation}
+    p(t) = \sum_{k=0}^d c_k t^k
+\end{equation}
+Then, considering a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, and posing $\mathbf{A}^0 = I_n$, we can define the polynomial function $p:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$ on a matrix $\mathbf{A}$ as follows:
+\begin{equation}
+    p(\mathbf{A}) = \sum_{k=0}^d c_k \mathbf{A}^k
+\end{equation}
+
+\subsection*{Rational functions}
+Let $f:\mathbb{C}\rightarrow\mathbb{C}$ be a rational function of the form:
+\begin{equation}
+    f(t) := \frac{p(t)}{q(t)}
+\end{equation}
+It is not immediate how one would approach this function with a matrix. We want to define
+\begin{equation}
+    f(\mathbf{A}) := q(\mathbf{A})^{-1}p(\mathbf{A})
+\end{equation}
+\end{document}
