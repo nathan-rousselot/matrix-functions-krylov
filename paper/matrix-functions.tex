@@ -45,7 +45,8 @@
 In this document we introduce the notion of matrix functions. Say we have a function $f:\mathbb{C}\rightarrow\mathbb{C}$, then we can define the function $f$ on a matrix $\mathbf{A}$ as follows: $f:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$. In the following, we will first provide some theretical background on matrix function. The, we will describe the numerical issues coming with manipulating matrix functions. Finally, we will provide algorithm for efficient computation of matrix fuctions.
 
 \section{Theoretical background}
-\subsection*{Polynomial functions}
+\subsection{Natural Definition}
+\subsubsection*{Polynomial functions}
 Let $p:\mathbb{C}\rightarrow\mathbb{C}$ be a polynomial function of degree $d$:
 \begin{equation}
     p(t) = \sum_{k=0}^d c_k t^k
@@ -55,7 +56,7 @@ Then, considering a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, and posing $\m
     p(\mathbf{A}) = \sum_{k=0}^d c_k \mathbf{A}^k
 \end{equation}
 
-\subsection*{Rational functions}
+\subsubsection*{Rational functions}
 Let $f:\mathbb{C}\rightarrow\mathbb{C}$ be a rational function of the form:
 \begin{equation}
     f(t) := \frac{p(t)}{q(t)}
@@ -77,7 +78,7 @@ However, this is not well defined if $q(\mathbf{A})$ is singular. In other words
     \end{align*}
 \end{proof}
 
-\subsection*{Power Series}
+\subsubsection*{Power Series}
 Let $f:\mathbb{C}\rightarrow\mathbb{C}$ be a function that can be expressed as a power series:
 \begin{equation}
     f(t) = \sum_{k=0}^\infty c_k t^k
@@ -98,5 +99,73 @@ For the matrix case, we need to ensure convergence (similarly to power series), 
 \begin{equation}
     f(\mathbf{A}) = \sum_{k=-d}^d c_k \mathbf{A}^k
 \end{equation}
+\subsection{Spectum-Based Definition}
+\subsubsection*{Diagonalizable Matrices}
+Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ be a diagonalizable matrix. That means that there exists a matrix $\mathbf{V}\in\mathbb{C}^{n\times n}$ such that $\mathbf{V}$ is invertible, and $\mathbf{A} = \mathbf{V}\mathbf{\Lambda}\mathbf{V}^{-1}$, where $\mathbf{\Lambda}$ is a diagonal matrix containing the eigenvalues of $\mathbf{A}$ :
+\begin{equation}
+    \mathbf{\Lambda} = \begin{bmatrix}
+        \lambda_1 & 0 & \cdots & 0 \\
+        0 & \lambda_2 & \cdots & 0 \\
+        \vdots & \vdots & \ddots & \vdots \\
+        0 & 0 & \cdots & \lambda_n
+    \end{bmatrix}
+\end{equation}
+\begin{theorem}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ be a diagonalizable matrix. Then we can define the function $f(\mathbf{A})$ as:
+    \begin{equation}
+        f(\mathbf{A}) := \mathbf{V}f(\mathbf{\Lambda})\mathbf{V}^{-1}
+    \end{equation}
+    with 
+    \begin{equation}
+        f(\mathbf{\Lambda}) = \begin{bmatrix}
+            f(\lambda_1) & 0 & \cdots & 0 \\
+            0 & f(\lambda_2) & \cdots & 0 \\
+            \vdots & \vdots & \ddots & \vdots \\
+            0 & 0 & \cdots & f(\lambda_n)
+        \end{bmatrix}
+    \end{equation}        
+\end{theorem}
+This property is very handy, as it allows us to compute matrix functions by simply applying the function to the eigenvalues of the matrix. Computationally, this avoids inverting matrices, and lots of matrix products. However, this property is only valid for diagonalizable matrices. This property puts constraints on $f(\mathbf{A})$, as its eigenvectors must form a basis $\mathbf{F}^n$. Another more practical constraint, that is sufficient but not necessary, is if $\mathbf{A}$ is a full rank matrix, then it is diagonalizable.
+
+\subsubsection*{Defective Matrices}
+In some cases, the matrix $\mathbf{A}$ is not diagonalizable, that means the sum of the dimensions of the eigenspaces is less than $n$, we call that a \textit{Defective Matrix}. In that case, we can generalize the principle of diagonalization using the Jordan canonical form of $\mathbf{A}$:
+\begin{equation}
+    \mathbf{A} = \mathbf{V}\mathbf{J}\mathbf{V}^{-1}
+\end{equation}
+where $\mathbf{J}$ is a Jordan matrix, and $\mathbf{V}$ is a matrix containing the generalized eigenvectors of $\mathbf{A}$. The Jordan matrix is a block diagonal matrix, where each block is a Jordan block. A Jordan block is a matrix of the form:
+\begin{equation}
+    \mathbf{J}_k(\lambda) = \begin{bmatrix}
+        \lambda & 1 & 0 & \cdots & 0 \\
+        0 & \lambda & 1 & \cdots & 0 \\
+        \vdots & \vdots & \ddots & \ddots & \vdots \\
+        0 & 0 & \cdots & \lambda & 1 \\
+        0 & 0 & \cdots & 0 & \lambda
+    \end{bmatrix}
+\end{equation}
+\begin{theorem}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ be a defective matrix. Then we can define the function $f(\mathbf{A})$ as:
+    \begin{equation}
+        f(\mathbf{A}) := \mathbf{V}f(\mathbf{J})\mathbf{V}^{-1}
+    \end{equation}
+    with 
+    \begin{equation}
+        f(\mathbf{J}) = \begin{bmatrix}
+            f(\mathbf{J}_1(\lambda_1)) & 0 & \cdots & 0 \\
+            0 & f(\mathbf{J}_2(\lambda_2)) & \cdots & 0 \\
+            \vdots & \vdots & \ddots & \vdots \\
+            0 & 0 & \cdots & f(\mathbf{J}_k(\lambda_k))
+        \end{bmatrix}
+    \end{equation}
+    and \begin{equation}
+        f(\mathbf{J}_i(\lambda_i)) = \begin{bmatrix}
+            f(\lambda_i) & f'(\lambda_i) & \frac{f''(\lambda_i)}{2!} & \cdots & \frac{f^{(k-1)}(\lambda_i)}{(k-1)!} \\
+            0 & f(\lambda_i) & f'(\lambda_i) & \cdots & \frac{f^{(k-2)}(\lambda_i)}{(k-2)!} \\
+            \vdots & \vdots & \ddots & \ddots & \vdots \\
+            0 & 0 & \cdots & f(\lambda_i) & f'(\lambda_i) \\
+            0 & 0 & \cdots & 0 & f(\lambda_i)
+        \end{bmatrix}
+    \end{equation}
+\end{theorem}
+Obviously, both definitions of matrix functions, based on diagonalization and Jordan canonical form, presuppose that the spectral radius of $\mathbf{A}$, $\rho(\mathbf{A})$, is less than $r$, the radius of convergence.
 \printbibliography
 \end{document}
