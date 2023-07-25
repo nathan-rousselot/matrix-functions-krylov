@@ -62,18 +62,39 @@ Let $f:\mathbb{C}\rightarrow\mathbb{C}$ be a rational function of the form:
     f(t) := \frac{p(t)}{q(t)}
 \end{equation}
 It is not immediate how one would approach this function with a matrix. We want to define
-\begin{equation}
+\begin{equation}\label{eq:rationale}
     f(\mathbf{A}) := q(\mathbf{A})^{-1}p(\mathbf{A})
 \end{equation}
-However, this is not well defined if $q(\mathbf{A})$ is singular. In other words, we need to make sure that $q(\mathbf{A})$ is invertible. This is the case if and only if $q(\lambda) \neq 0$ for all eigenvalues $\lambda$ of $\mathbf{A}$. This is a very strong condition, and it is not always possible to find a rational function $f$ such that $q(\lambda) \neq 0$ for all eigenvalues $\lambda$ of $\mathbf{A}$. Furthermore, there is an ambiguity in the definition of $f(\mathbf{A})$ as one could want to express $f(\mathbf{A}) := p(\mathbf{A})q(\mathbf{A})^{-1}$ instead. Indeed, in matrix computations, multiplication is not (necessarly) commutative. Thus, in some cases, $q(\mathbf{A})^{-1}p(\mathbf{A}) \neq p(\mathbf{A})q(\mathbf{A})^{-1}$.
+However, this is not well defined if $q(\mathbf{A})$ is singular. In other words, we need to make sure that $q(\mathbf{A})$ is invertible. This is the case if and only if $q(\lambda) \neq 0$ for all eigenvalues $\lambda$ of $\mathbf{A}$. This is a very strong condition, and it is not always possible to find a rational function $f$ such that $q(\lambda) \neq 0$ for all eigenvalues $\lambda$ of $\mathbf{A}$. We note that a choice in notation has been made in equation \ref{eq:rationale}, the other notation is still valid.
+\begin{lemma}\label{lem:commute}
+     Let $\mathbf{A}\in\mathbb{C}^{n\times n}$, and let $p:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$ and $q:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$, two matrix polynomials. Then,
+     \begin{equation}
+         q(\mathbf{A})p(\mathbf{A}) = p(\mathbf{A})q(\mathbf{A})
+     \end{equation}
+\end{lemma}
+\begin{proof}
+    Let $f(\mathbf{A}) := q(\mathbf{A})p(\mathbf{A})$, and $g(\mathbf{A}) = p(\mathbf{A})q(\mathbf{A})$. Then
+    \begin{align*}
+        f(\mathbf{A}) = \left(\sum_{k=0}^d c_k\mathbf{A}^k\right)\left(\sum_{j=0}^m b_j\mathbf{A}^j\right)\\
+        = \sum_{k=0}^d \sum_{j=0}^m c_kb_j\mathbf{A}^{j+k}\\
+        = \sum_{j=0}^m \sum_{k=0}^d b_jc_k\mathbf{A}^{k+j}\\
+        = \left(\sum_{j=0}^m b_j\mathbf{A}^j\right)\left(\sum_{k=0}^d c_k\mathbf{A}^k\right) = g(\mathbf{A})
+    \end{align*}
+\end{proof}
 \begin{theorem}
-    Let $p:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$ and $q:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$ be two polynomial functions of degree $d$. Then, if $q(\mathbf{A})$ is non-singular, and if $p(\mathbf{A})$ and $q(\mathbf{A})$ commute, then $f(\mathbf{A}) := q(\mathbf{A})^{-1}p(\mathbf{A}) = p(\mathbf{A})q(\mathbf{A})^{-1}$.
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$, and let $p:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$ and $q:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$, two matrix polynomials such that $q(\mathbf{A})$ is non-singular. Then, 
+    \begin{equation}
+        q(\mathbf{A})^{-1}p(\mathbf{A}) = p(\mathbf{A})q(\mathbf{A})^{-1}
+    \end{equation}
 \end{theorem}
 \begin{proof}
-    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ be a matrix such that $q(\mathbf{A})$ is non-singular, and such that $p(\mathbf{A})$ and $q(\mathbf{A})$ commute. Then, we have:
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ be a matrix such that $q(\mathbf{A})$ is non-singular
     \begin{align*}
-        q(\mathbf{A})^{-1}p(\mathbf{A}) = q(\mathbf{A})^{-1}p(\mathbf{A})q(\mathbf{A})q(\mathbf{A})^{-1} \\
-        = q(\mathbf{A})^{-1}q(\mathbf{A})p(\mathbf{A})q(\mathbf{A})^{-1} \\
+        q(\mathbf{A})^{-1}p(\mathbf{A}) = q(\mathbf{A})^{-1}p(\mathbf{A})q(\mathbf{A})q(\mathbf{A})^{-1} 
+    \end{align*}
+    Using Lemma \ref{lem:commute}
+    \begin{align*}        
+    q(\mathbf{A})^{-1}p(\mathbf{A})q(\mathbf{A})q(\mathbf{A})^{-1} = q(\mathbf{A})^{-1}q(\mathbf{A})p(\mathbf{A})q(\mathbf{A})^{-1} \\
         = p(\mathbf{A})q(\mathbf{A})^{-1}
     \end{align*}
 \end{proof}
