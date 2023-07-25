@@ -26,6 +26,9 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
+
+\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
+
 %% -----------------------------
 %% TITLE
 %% -----------------------------
@@ -188,5 +191,39 @@ where $\mathbf{J}$ is a Jordan matrix, and $\mathbf{V}$ is a matrix containing t
     \end{equation}
 \end{theorem}
 Obviously, both definitions of matrix functions, based on diagonalization and Jordan canonical form, presuppose that the spectral radius of $\mathbf{A}$, $\rho(\mathbf{A})$, is less than $r$, the radius of convergence.
+\subsection{Interpolation-based definition}
+Interestingly, in this section we will show that for any $\mathbf{A}\in\mathbb{C}^{n\times n}$ and any sufficiently differentiable $f$, we can find a polynomial $p$ such that $f(\mathbf{A})=p(\mathbf{A})$. First, let us observe from previous sections that only the eigenvalues of $\mathbf{A}$ are actually important for matrix polynomials. Also recall that every matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$ with spectrum $\{\lambda_1,\dots,\lambda_n\}$ has a minimal polynomial $\phi_{\mathbf{A}}$ given by
+\begin{equation}\label{eq:minimalpoly}
+\phi_{\mathbf{A}}(t):=\prod_{i=1}^{k}(t-\lambda_k)^{n_k}
+\end{equation}
+which is the unique monic minimal degree ($\text{degr}(\phi_{\mathbf{A}})=n_1+\cdots+n_k\leq n$) polynomial such that $\phi_{\mathbf{A}}(\mathbf{A})=0$.
+\begin{theorem}\label{thm:unicity}
+Let $\mathbf{A}\in \mathbb{C}^{n\times n}$ be a matrix with eigenvalues $\{\lambda_1,\ldots,\lambda_k\}$, and minimal polynomial given by equation~\ref{eq:minimalpoly}. Then for any two polynomials $p_1,p_2$ we have that $p_1(\mathbf{A})=p_2(\mathbf{A})$ if and only if 
+$$\forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,n_k-1\}: p_1^{(i)}(\lambda_j)=p_2^{(i)}(\lambda_j).$$
+\end{theorem}
+\begin{proof}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$, with spectrum $\{\lambda_1,\ldots,\lambda_k\}$, and two polynomials $p_1$ and $p_2$ such that $p_1(\mathbf{A})=p_2(\mathbf{A})$. Let us define $q$ such that
+    \begin{equation*}
+        q := p_1 - p_2
+    \end{equation*}
+    Then, $q(\mathbf{A})=0$, and is thus divisible by $\phi_{\mathbf{A}}$, meaning that
+    \begin{equation*}
+        \forall j\in\{1,\dots,k\}:\forall i\in\{0,\ldots,n_k-1\}, q(\lambda_j) = 0 \Rightarrow p_1^{(i)}(\lambda_j) = p_1^{(i)}(\lambda_i)
+    \end{equation*}
+    Similarly, consider two polynomials $p_1$ and $p_2$ such that 
+    \begin{equation*}
+        \forall j\in\{1,\dots,k\}:\forall i\in\{0,\ldots,n_k-1\},  p_1^{(i)}(\lambda_j) = p_2^{(i)}(\lambda_i)    
+    \end{equation*}
+    For $i=0$, $q:=p_1-p_2=0$ on the spectrum of $\mathbf{A}$, and is then divisible by $\phi_{\mathbf{A}}$. Then
+    \begin{equation*}
+        q = K\phi_{\mathbf{A}}
+    \end{equation*}
+    with $K$ a polynomial. Then, $q(\mathbf{A})=K(\mathbf{A})\phi_{\mathbf{A}}(\mathbf{A}) = 0$ since by definition, $\phi_{\mathbf{A}}(\mathbf{A}) = 0$. And thus, $p_1(\mathbf{A})=p_2(\mathbf{A})$.
+
+    From this reasoning, we conclude that 
+    \begin{align*}
+        p_1(\mathbf{A}) = p_2(\mathbf{A}) \\ \Leftrightarrow \forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,n_k-1\}: p_1^{(i)}(\lambda_j)=p_2^{(i)}(\lambda_j)
+    \end{align*}
+\end{proof}
 \printbibliography
 \end{document}
