@@ -6,7 +6,7 @@
 % A first test is the following:
 clear
 clc
-load test1.mat
+load Matrix1.mat
 
 f_vec = {@(x)funm(x,@sin),@(x)funm(x,@cos),@(x)funm(x,@exp) };
 F= f_vec{3};%@(x)funm(x,@exp);

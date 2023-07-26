@@ -242,5 +242,22 @@ From this corollary, and from theorem \ref{thm:unicity}, we can confirm our earl
     of minimal degree. Then we define $f(\mathbf{A})=p(\mathbf{A})$.
 \end{definition}
 %%%%%%% NEED TO COMMENT ON THIS %%%%%%%%
+\section{The matrix-vector product $f(\mathbf{A})\mathbf{b}$}
+\subsection{Introduction}
+To motivate the need for a matrix-vector product, we will consider a matrix $\mathbf{A}\in\mathbb{C}^{5\times 5}$
+\section{Algorithms}
+In this section, we will implement basic algorithms. From the previous section, we will distinguish two cases : 
+\begin{itemize}
+    \item the dense case, where $f(\mathbf{A})$ is to be computed
+    \item and the case where only the matrix-vector product $f(\mathbf{A})\mathbf{b}$ is to be computed
+\end{itemize}
+\subsection{Dense case}
+\section{Applications}
+\subsection{Matrix Exponential}
+Consider the simple system of ODEs
+\begin{equation}\label{eq:ode}
+    \frac{d\mathbf{x}}{dt} = \mathbf{A}\mathbf{x}
+\end{equation}
+with initial condition $\mathbf{x}(0) = \mathbf{x}_0\in\mathbb{R}^n$. Then we know the solution to be given by $\mathbf{x}(t)=e^{At}\mathbf{x}_0$. However, for all but the stablest systems, this is not a good method, due to issues such as stability and stiffness.
 \printbibliography
 \end{document}
