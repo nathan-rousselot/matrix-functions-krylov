@@ -26,6 +26,7 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}[theorem]
 
 \renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
 
@@ -225,5 +226,21 @@ $$\forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,n_k-1\}: p_1^{(i)}(\lambda_j
         p_1(\mathbf{A}) = p_2(\mathbf{A}) \\ \Leftrightarrow \forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,n_k-1\}: p_1^{(i)}(\lambda_j)=p_2^{(i)}(\lambda_j)
     \end{align*}
 \end{proof}
+In theorem~\ref{thm:unicity}, the conditions involve the evaluation of the polynomials $p_1$ and $p_2$ and their derivatives up to order $n_k-1$ at the eigenvalues of $A$.
+
+However, when the spectrum of $A$ is simple, each eigenvalue $\lambda_j$ is of multiplicity $n_j=1$. This means that there are no higher order terms corresponding to these eigenvalues in the minimal polynomial, or in other words, there are no repeated roots. Consequently, there is no need to consider the derivatives of the polynomials $p_1$ and $p_2$ because there are no repeated roots for the polynomials to ``match up'' with. Therefore, in this simpler case, we only need to check that the polynomials $p_1$ and $p_2$ agree at the eigenvalues of $A$. In formal terms, the condition becomes:
+\begin{corollary}\label{cor:unicity}
+Let $\mathbf{A}\in \mathbb{C}^{n\times n}$ be a matrix with eigenvalues $\{\lambda_1,\ldots,\lambda_k\}$, and minimal polynomial given by equation~\ref{eq:minimalpoly}. If $\mathbf{A}$ has simple spectrum, then for any two polynomials $p_1,p_2$ we have that $p_1(\mathbf{A})=p_2(\mathbf{A})$ if and only if
+\begin{equation*}
+    \forall j\in\{1,\ldots,k\}: p_1(\lambda_j)=p_2(\lambda_j).
+\end{equation*}
+\end{corollary}
+From this corollary, and from theorem \ref{thm:unicity}, we can confirm our earlier statement : only the spectrum of $\mathbf{A}$ is important for matrix polynomials. More importantly, we observe that $p(\mathbf{A})$ is uniquely defined by its values on the spectrum of $\mathbf{A}$. It seems then natural to extend this definition to any function $f$.
+\begin{definition}\label{def:Hermite}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ be a matrix with minimal polynomial given as in equation \ref{eq:minimalpoly}, and let $f$ be a function that is at least $\max_k\{n_k-1\}$ times differentiable. Say $p$ is its $(n_1,\ldots,n_k)$-\emph{Hermite interpolant} i.e. the polynomial satisfying
+    $$\forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,n_k-1\}: p^{(i)}(\lambda_j)=f^{(i)}(\lambda_j)$$
+    of minimal degree. Then we define $f(\mathbf{A})=p(\mathbf{A})$.
+\end{definition}
+%%%%%%% NEED TO COMMENT ON THIS %%%%%%%%
 \printbibliography
 \end{document}
