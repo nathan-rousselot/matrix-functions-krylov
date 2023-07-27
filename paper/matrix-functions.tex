@@ -22,7 +22,7 @@
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
    \node[shape=circle,draw=red,inner sep=1pt] (char) {#1};}}
 \setlength\parindent{0pt} %% Do not touch this
-\DeclareMathOperator{\phiAb}{\phi_{A,\mathbf{b}}}
+\DeclareMathOperator{\phiAb}{\phi_{\mathbf{A},\mathbf{b}}}
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
@@ -244,7 +244,79 @@ From this corollary, and from theorem \ref{thm:unicity}, we can confirm our earl
 %%%%%%% NEED TO COMMENT ON THIS %%%%%%%%
 \section{The matrix-vector product $f(\mathbf{A})\mathbf{b}$}
 \subsection{Introduction}
-To motivate the need for a matrix-vector product, we will consider a matrix $\mathbf{A}\in\mathbb{C}^{5\times 5}$
+To motivate the need for a matrix-vector product, we will consider a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$. Let us consider the matrix exponential, such as :
+\begin{equation}
+    e^{\mathbf{A}} = \sum_{k=0}^\infty \frac{\mathbf{A}^k}{k!}
+\end{equation}
+Not only does this computation is very heavy (see section \ref{sec:matrixexp} for computation strategies), but it also affects the structure of the matrix. Say for example, we have the following laplacian matrix: 
+\begin{equation*}
+    \mathbf{A} = \begin{bmatrix}
+        2 & -1 & 0 & 0 & \dots &  \dots & 0 \\
+        -1 & 2 & -1 & 0 & 0 & \dots & 0 \\
+        0 & -1 & 2 & -1 & 0 & \dots & 0 \\
+        \vdots & \vdots & \ddots & \ddots & \ddots & \ddots & \vdots \\
+        0 & 0 & \dots & 0 & -1 & 2 & -1 \\
+        0 & 0 & \dots & 0 & 0 & -1 & 2
+    \end{bmatrix}
+\end{equation*}
+Obviously, $\mathbf{A}$ is a sparse matrix, and also a rank-structured one : it is a tridiagonal matrix. However, by computing $e^{\mathbf{A}}$, one will get a dense matrix. Storing a dense matrix often becomes challenging as the dimension of the problem grows. Besides storing, computing such a dense matrix is also an issue. However, the matrix-vector product $f(\mathbf{A})\mathbf{b}$ can be stored and computed efficiently.
+
+\subsection{The Method}
+In this section we will work towards a way to evaluate $f(\mathbf{A})\mathbf{b}$ in an intuitive way.
+
+\subsubsection{Formal Definitions}
+Firstly, we will define the notion of $\phiAb$, i.e. the minimal polynomial of $\mathbf{A}$ with respect to the vector $\mathbf{b}$. This is simply the polynomial
+\begin{equation}\label{eq:minPolyAb}
+\phiAb(t):= \prod_{i=1}^{k}(t-\lambda_i)^{m_k}
+\end{equation}
+of minimal degree such that $\phiAb(\mathbf{A})\mathbf{b}=\mathbf{0}$. Here $\lambda_1,\ldots,\lambda_k$ are again the eigenvalues of $\mathbf{A}$.
+
+%%%%% EXAMPLE WHERE PHIab =/= PHIa %%%%%
+
+\begin{lemma}\label{lem:phiAb}
+    Let $\mathbf{A}\in \mathbb{C}^{n\times n}$ be a matrix with eigenvalues $\{\lambda_1,\ldots,\lambda_k\}$, and minimal polynomial given by equation~\ref{eq:minimalpoly}. Then for any two polynomials $p_1,p_2$ we have that $p_1(\mathbf{A})\mathbf{b}=p_2(\mathbf{A})\mathbf{b}$ if and only if 
+$$\forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,n_k-1\}: p_1^{(i)}(\lambda_j)=p_2^{(i)}(\lambda_j).$$
+\end{lemma}
+
+\begin{proof}
+    From theorem \ref{thm:unicity}, we know that
+    \begin{align*}
+        p_1(\mathbf{A}) = p_2(\mathbf{A}) \\ \Leftrightarrow \forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,n_k-1\}: p_1^{(i)}(\lambda_j)=p_2^{(i)}(\lambda_j)
+    \end{align*}
+    We also know that 
+    \begin{align*}
+        p_1(\mathbf{A}) = p_2(\mathbf{A}) \Leftrightarrow p_1(\mathbf{A})\mathbf{b} = p_2(\mathbf{A})\mathbf{b}
+    \end{align*}
+    Thus, we conclude that
+    \begin{align*}
+        p_1(\mathbf{A})\mathbf{b} = p_2(\mathbf{A})\mathbf{b} \\ \Leftrightarrow \forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,n_k-1\}: p_1^{(i)}(\lambda_j)=p_2^{(i)}(\lambda_j)
+    \end{align*}
+\end{proof}
+
+
+\begin{theorem}\label{thm:KrylovApprox}
+    Let $f$ be a sufficiently differentiable function that has no singularities on the spectrum of a given matrix $\mathbf{A}\in\mathbb{C}^{n \times n}$. Then, with $p$ the unique Hermite interpolating polynomial of $\mathbf{A}$ w.r.t. $\mathbf{b}$ i.e. 
+    $$\forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,m_k-1\}:p^{(i)}(\lambda_j)=f^{(i)}(\lambda_j)$$
+    we have that $f(\mathbf{A})\mathbf{b}=p(\mathbf{A})\mathbf{b}$.
+\end{theorem}
+%%%%% PROVE IT %%%%%
+
+\begin{proof}
+    Let $f$ be a function that is at least $\max_k\{m_k-1\}$ times differentiable, and let $p_1$ be its $(m_1,\ldots,m_k)$-Hermite interpolant. Then, by definition \ref{def:Hermite}, we have that 
+    \begin{equation*}
+        f(\mathbf{A}) = p_1(\mathbf{A})
+    \end{equation*}
+    Then, by lemma \ref{lem:phiAb}, let us define $p_2$ such that
+    \begin{equation*}
+        p_2(\mathbf{A})\mathbf{b} = p_1(\mathbf{A})\mathbf{b}
+    \end{equation*}
+    Then, we have that
+    \begin{equation*}
+        p_1(\mathbf{A})\mathbf{b} = p_2(\mathbf{A})\mathbf{b} = f(\mathbf{A})\mathbf{b}
+    \end{equation*}
+\end{proof}
+
+\subsubsection{The Arnoldi Method}
 \section{Algorithms}
 In this section, we will implement basic algorithms. From the previous section, we will distinguish two cases : 
 \begin{itemize}
@@ -253,7 +325,7 @@ In this section, we will implement basic algorithms. From the previous section, 
 \end{itemize}
 \subsection{Dense case}
 \section{Applications}
-\subsection{Matrix Exponential}
+\subsection{Matrix Exponential}\label{sec:matrixexp}
 Consider the simple system of ODEs
 \begin{equation}\label{eq:ode}
     \frac{d\mathbf{x}}{dt} = \mathbf{A}\mathbf{x}
