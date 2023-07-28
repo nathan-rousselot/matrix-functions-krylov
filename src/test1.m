@@ -1,4 +1,4 @@
-%% Test 1
+% Test 1
 % Here you should write your test routines, to verify that your
 % implementation of the matrix function evaluation is correct
 % You should test it on the matrix 'test1.mat'
