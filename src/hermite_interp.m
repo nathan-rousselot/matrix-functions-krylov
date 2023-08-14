@@ -21,5 +21,4 @@ function P = hermite_interp(X, FdF)
     end
 
     P = @(x) eval_diff(x,X,p(1,:)); %evaluating the divided differences requires care, off-loaded to separate function
-
 end

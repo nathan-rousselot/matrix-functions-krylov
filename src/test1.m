@@ -8,8 +8,6 @@ clear
 clc
 load Matrix1.mat
 
-A = eye(5);
-
 f_vec = {@(x)funm(x,@sin),@(x)funm(x,@cos),@(x)funm(x,@exp) };
 F= f_vec{3};%@(x)funm(x,@exp);
 err = zeros(3,1);
@@ -21,3 +19,26 @@ for i = 1:3
 end
 
 % you can continue with your own tests here...
+
+%%% Generate Dense (random) Matrix
+
+N = 5:2:20;
+err_arr = zeros(3,length(N)); % Array of measured errors
+for i = 1:length(N)
+    A = randn(N(i),N(i)); % Generate gaussian distributed matrix of size N*N ~ N(0,1)
+    for j = 1:1
+        f_A=f_vec{j}(A);
+        f_A_test = matrix_function(f_vec{j},A);
+        err_arr(j,i) = norm(f_A-f_A_test);
+    end
+end
+
+figure;
+semilogy(N,err_arr(1,:));
+hold on
+semilogy(N,err_arr(2,:));
+hold on
+semilogy(N,err_arr(3,:));
+legend('sin(A)','cos(A)','exp(A)')
+xlabel('Taille de la matrice N')
+ylabel('Erreur')

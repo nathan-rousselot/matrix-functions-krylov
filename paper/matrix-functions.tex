@@ -243,7 +243,7 @@ From this corollary, and from theorem \ref{thm:unicity}, we can confirm our earl
 \end{definition}
 %%%%%%% NEED TO COMMENT ON THIS %%%%%%%%
 \section{The matrix-vector product $f(\mathbf{A})\mathbf{b}$}
-\subsection{Introduction}
+\subsection{Introduction}\label{sec:fabintro}
 To motivate the need for a matrix-vector product, we will consider a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$. Let us consider the matrix exponential, such as :
 \begin{equation}
     e^{\mathbf{A}} = \sum_{k=0}^\infty \frac{\mathbf{A}^k}{k!}
@@ -262,7 +262,7 @@ Not only does this computation is very heavy (see section \ref{sec:matrixexp} fo
 Obviously, $\mathbf{A}$ is a sparse matrix, and also a rank-structured one : it is a tridiagonal matrix. However, by computing $e^{\mathbf{A}}$, one will get a dense matrix. Storing a dense matrix often becomes challenging as the dimension of the problem grows. Besides storing, computing such a dense matrix is also an issue. However, the matrix-vector product $f(\mathbf{A})\mathbf{b}$ can be stored and computed efficiently.
 
 \subsection{The Method}
-In this section we will work towards a way to evaluate $f(\mathbf{A})\mathbf{b}$ in an intuitive way.
+As motivated by \ref{sec:fabintro}, when encountering specific structure in $\mathbf{A}$, such as sparsity, there is a lot to gain if we can store $f(\mathbf{A})\mathbf{b}$. In this section we will work towards a way to evaluate $f(\mathbf{A})\mathbf{b}$ in an intuitive way, thanks to Arnoldi method.
 
 \subsubsection{Formal Definitions}
 Firstly, we will define the notion of $\phiAb$, i.e. the minimal polynomial of $\mathbf{A}$ with respect to the vector $\mathbf{b}$. This is simply the polynomial
@@ -317,6 +317,18 @@ $$\forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,n_k-1\}: p_1^{(i)}(\lambda_j
 \end{proof}
 
 \subsubsection{The Arnoldi Method}
+The Arnoldi method is a reduction method that allows low-rank approximation of a given matrix $\mathbf{A}$. It is based on the Hessenberg reduction of a matrix $\mathbf{A}$. More formally
+\begin{definition}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$, the Arnoldi method approximates its Hessenberg reduction given by
+    \begin{equation}
+        \mathbf{Q}^*\mathbf{A}\mathbf{Q} = \mathbf{H}
+    \end{equation}
+    where $\mathbf{Q}\in\mathbb{C}^{n\times n}$ is unitary, and $\mathbf{H}\in\mathbb{C}^{n\times n}$ is upper Hessenberg. As it is a (low-rank) approximation, Arnoldi will compute the following decomposition
+    \begin{equation}
+        \mathbf{Q}_k^*\mathbf{A}\mathbf{Q}_k = \mathbf{H}_k
+    \end{equation}
+    with $\mathbf{Q}_k\in\mathbb{C}^{n\times k}$ unitary, and $\mathbf{H}_k\in\mathbb{C}^{k\times k}$ upper Hessenberg. That means that $\mathbf{H}_k$ is the orthogonal projection of $\mathbf{A}$ onto the Krylov subspace $\mathcal{K}_k(\mathbf{A},\mathbf{q_1})$, with $\mathbf{q_1}$ the first column of $\mathbf{Q}$.
+\end{definition}
 \section{Algorithms}
 In this section, we will implement basic algorithms. From the previous section, we will distinguish two cases : 
 \begin{itemize}
