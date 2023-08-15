@@ -13,6 +13,7 @@
 \documentclass[12pt]{article}
 \usepackage{float}
 \usepackage[ruled,vlined,linesnumbered,algo2e]{algorithm2e}
+\usepackage{algorithm}
 \usepackage{amsmath,amssymb}
 \usepackage{amsthm}
 \usepackage{makecell}
@@ -23,6 +24,7 @@
    \node[shape=circle,draw=red,inner sep=1pt] (char) {#1};}}
 \setlength\parindent{0pt} %% Do not touch this
 \DeclareMathOperator{\phiAb}{\phi_{\mathbf{A},\mathbf{b}}}
+\DeclareMathOperator{\spn}{span}
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
@@ -195,7 +197,7 @@ Obviously, both definitions of matrix functions, based on diagonalization and Jo
 \subsection{Interpolation-based definition}
 Interestingly, in this section we will show that for any $\mathbf{A}\in\mathbb{C}^{n\times n}$ and any sufficiently differentiable $f$, we can find a polynomial $p$ such that $f(\mathbf{A})=p(\mathbf{A})$. First, let us observe from previous sections that only the eigenvalues of $\mathbf{A}$ are actually important for matrix polynomials. Also recall that every matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$ with spectrum $\{\lambda_1,\dots,\lambda_n\}$ has a minimal polynomial $\phi_{\mathbf{A}}$ given by
 \begin{equation}\label{eq:minimalpoly}
-\phi_{\mathbf{A}}(t):=\prod_{i=1}^{k}(t-\lambda_k)^{n_k}
+\phi_{\mathbf{A}}(t):=\prod_{i=1}^{k}(t-\lambda_k)^{n_i}
 \end{equation}
 which is the unique monic minimal degree ($\text{degr}(\phi_{\mathbf{A}})=n_1+\cdots+n_k\leq n$) polynomial such that $\phi_{\mathbf{A}}(\mathbf{A})=0$.
 \begin{theorem}\label{thm:unicity}
@@ -267,7 +269,7 @@ As motivated by \ref{sec:fabintro}, when encountering specific structure in $\ma
 \subsubsection{Formal Definitions}
 Firstly, we will define the notion of $\phiAb$, i.e. the minimal polynomial of $\mathbf{A}$ with respect to the vector $\mathbf{b}$. This is simply the polynomial
 \begin{equation}\label{eq:minPolyAb}
-\phiAb(t):= \prod_{i=1}^{k}(t-\lambda_i)^{m_k}
+\phiAb(t):= \prod_{i=1}^{k}(t-\lambda_i)^{m_i}
 \end{equation}
 of minimal degree such that $\phiAb(\mathbf{A})\mathbf{b}=\mathbf{0}$. Here $\lambda_1,\ldots,\lambda_k$ are again the eigenvalues of $\mathbf{A}$.
 
@@ -321,14 +323,108 @@ The Arnoldi method is a reduction method that allows low-rank approximation of a
 \begin{definition}
     Let $\mathbf{A}\in\mathbb{C}^{n\times n}$, the Arnoldi method approximates its Hessenberg reduction given by
     \begin{equation}
-        \mathbf{Q}^*\mathbf{A}\mathbf{Q} = \mathbf{H}
+        \mathbf{V}^*\mathbf{A}\mathbf{V} = \mathbf{H}
     \end{equation}
-    where $\mathbf{Q}\in\mathbb{C}^{n\times n}$ is unitary, and $\mathbf{H}\in\mathbb{C}^{n\times n}$ is upper Hessenberg. As it is a (low-rank) approximation, Arnoldi will compute the following decomposition
+    where $\mathbf{V}\in\mathbb{C}^{n\times n}$ is unitary, and $\mathbf{H}\in\mathbb{C}^{n\times n}$ is upper Hessenberg. As it is a (low-rank) approximation, Arnoldi will compute the following decomposition
     \begin{equation}
-        \mathbf{Q}_k^*\mathbf{A}\mathbf{Q}_k = \mathbf{H}_k
+        \mathbf{V}_k^*\mathbf{A}\mathbf{V}_k = \mathbf{H}_k
     \end{equation}
-    with $\mathbf{Q}_k\in\mathbb{C}^{n\times k}$ unitary, and $\mathbf{H}_k\in\mathbb{C}^{k\times k}$ upper Hessenberg. That means that $\mathbf{H}_k$ is the orthogonal projection of $\mathbf{A}$ onto the Krylov subspace $\mathcal{K}_k(\mathbf{A},\mathbf{q_1})$, with $\mathbf{q_1}$ the first column of $\mathbf{Q}$.
+    with $\mathbf{V}_k\in\mathbb{C}^{n\times k}$ unitary, and $\mathbf{H}_k\in\mathbb{C}^{k\times k}$ upper Hessenberg. That means that $\mathbf{H}_k$ is the orthogonal projection of $\mathbf{A}$ onto the $k$th Krylov subspace $\mathcal{K}_k(\mathbf{A},\mathbf{v_1})$, with $\mathbf{v_1}$ the first column of $\mathbf{V}$.
 \end{definition}
+The Arnoldi method is an iterative method, following this algorithm:
+\begin{algorithm2e}\label{alg:arnoldi}
+    \SetAlgoLined
+    \KwData{$A \in \mathbb{C}^{n \times n}$, $v_1 \in \mathbb{C}^n$ a unit vector in the chosen norm (line 7)}
+    \KwResult{$H_n \in \mathbb{C}^{n\times n}$}
+    \caption{Arnoldi Iteration}
+    \For{$k = 1 \KwTo n$}{
+        $\mathbf{w} \gets \mathbf{A}\mathbf{v}_k$\;
+        \For{$i = 1 \KwTo k$}{
+            $h_{ik} \gets \mathbf{v}_i^*\mathbf{w}$\;
+            $\mathbf{w} \gets \mathbf{w} - h_{ik}\mathbf{v}_i$\;
+        }
+        $h_{k+1,k} \gets \|\mathbf{w}\|$\;
+        \If{$h_{k+1,k} = 0$}{
+            \textbf{break}\;
+        }
+        $\mathbf{v_{k+1}} \gets \mathbf{w}/h_{k+1,k}$
+    }
+    \label{alg:arnoldi}
+\end{algorithm2e}
+
+Here the orthogonalization process (lines 3-6) is a modified Gram-Schmidt process. Also, when implementing, we will consider an $\ell_2$ norm. Numerical conditions will often imply loss of orthogonality. To avoid this, it will be necessary to reorthogonalize, \textit{i.e.} to reapply the Gram-Schmidt process.
+\subsubsection{The matrix-vector product $f(\mathbf{A})\mathbf{b}$}
+Recall the problem is to approximate the matrix-vector product $f(\mathbf{A})\mathbf{b}$. Now we have all the tools to achieve that efficiently.  
+\begin{lemma}\label{lem:arnoldi1}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ and $\mathbf{b}\in\mathbb{C}^n$. Then, the matrix vector product $f(\mathbf{A})\mathbf{b}$ can be approximated by
+    \begin{equation}
+        f(\mathbf{A})\mathbf{b} \approx \|\mathbf{b}\|_2\mathbf{V}_k f(\mathbf{H}_k)\mathbf{e}_1
+    \end{equation}
+    Where $\mathbf{V}_k$ and $\mathbf{H}_k$ are the matrices computed by the Arnoldi method after $k$ iterations. $\mathbf{H}_k$ is upper Hessenberg and $\spn{\left(\mathbf{V}_k\right)}=\mathcal{K}_k(\mathbf{A},\mathbf{b}) = \spn{\left(\mathbf{b}, \mathbf{A}\mathbf{b}, \mathbf{A}^2\mathbf{b}, \dots, \mathbf{A}^{k-1}\mathbf{b}\right)}$. $\mathbf{e}_1$ is the first column of the identity matrix.
+\end{lemma}
+\begin{proof}
+    Consider we want to approximate de matrix-vactor product $f(\mathbf{A})\mathbf{b}$. We will use the Arnoldi method (algorithm \ref{alg:arnoldi}). For initial unit vector we choose $\mathbf{v}_1 = \mathbf{b}/\|\mathbf{b}\|_2$ which is indeed an $\ell_2$ unit vector. According to the Hessenberg reduction of $\mathbf{A}$, we have that
+    \begin{equation*}
+        f(\mathbf{A})\mathbf{b} \approx f(\mathbf{V_k}\mathbf{H}_k\mathbf{V}_k^*)\mathbf{b}
+    \end{equation*}
+    Since $\mathbf{V}_k$ is unitary, we have
+    \begin{equation*}
+        f(\mathbf{A})\mathbf{b} \approx \mathbf{V}_k f(\mathbf{H}_k)\mathbf{V}_k^*\mathbf{b}
+    \end{equation*}
+    Furthermore, as we chose $\mathbf{v}_1 = \mathbf{b}/\|\mathbf{b}\|_2$, we have that
+    \begin{equation*}
+        \mathbf{b} = \|\mathbf{b}\|_2\mathbf{v}_1 = \|\mathbf{b}\|_2\mathbf{V}_k\mathbf{e}_1
+    \end{equation*}
+    Thus, we have that
+    \begin{equation*}
+        f(\mathbf{A})\mathbf{b} \approx \|\mathbf{b}\|_2\mathbf{V}_k f(\mathbf{H}_k)\mathbf{V}_k^*\mathbf{V}_k\mathbf{e}_1 = \|\mathbf{b}\|_2\mathbf{V}_k f(\mathbf{H}_k)\mathbf{e}_1
+    \end{equation*}
+\end{proof}
+
+\begin{lemma}\label{lem:arnoldi2}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ and let $\mathbf{V}_k$, $\mathbf{H}_k$ be the matrices computed by the Arnoldi method after $k$ iterations. Then, for any polynomial $p_j$ of degree $j\leq k-1$, we have that
+    \begin{equation}
+        p_j(\mathbf{A})\mathbf{b} = \mathbf{V}_kp_j(\mathbf{H}_k)\mathbf{e}_1
+    \end{equation}
+\end{lemma}
+
+\begin{lemma}\label{lem:arnoldi3}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ and let $\mathbf{V}_k$, $\mathbf{H}_k$ be the matrices computed by the Arnoldi method after $k$ iterations. Then, given $p_{k-1}$ the unique Hermite interpolant of $\mathbf{A}$ w.r.t. $\mathbf{b}$ of degree $k-1$, we have that
+    \begin{equation}
+        \|\mathbf{b}\|_2\mathbf{V}_k f(\mathbf{H}_k)\mathbf{e}_1 = p_{k-1}(\mathbf{A})\mathbf{b}
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    Since $p_{k-1}$ is the unique Hermite interpolant of $\mathbf{A}$ w.r.t. $\mathbf{b}$ of degree $k-1$, we have that
+    \begin{equation*}
+        \|\mathbf{b}\|_2\mathbf{V}_k f(\mathbf{H}_k)\mathbf{e}_1 = \|\mathbf{b}\|_2\mathbf{V}_k p_{k-1}(\mathbf{H}_k)\mathbf{e}_1
+    \end{equation*}
+    And since 
+    \begin{equation*}
+        \|\mathbf{b}\|_2\mathbf{V}_k p_{k-1}(\mathbf{H}_k)\mathbf{e}_1 = \|\mathbf{b}\|_2p_{k-1}(\mathbf{A})\mathbf{q}_1 = p_{k-1}(\mathbf{A})\mathbf{b}
+    \end{equation*}
+    We indeed have
+    \begin{equation*}
+        \|\mathbf{b}\|_2\mathbf{V}_k f(\mathbf{H}_k)\mathbf{e}_1 = p_{k-1}(\mathbf{A})\mathbf{b}
+    \end{equation*}
+\end{proof}
+
+\begin{theorem}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ and let $m = \deg(\phiAb)$ then
+    \begin{equation}
+        f(\mathbf{A})\mathbf{b} = \|\mathbf{b}\|_2\mathbf{V}_m f(\mathbf{H}_m)\mathbf{e}_1
+    \end{equation}
+\end{theorem}
+\begin{proof}
+    Following theorem \ref{thm:KrylovApprox}, we have that
+    \begin{equation*}
+        f(\mathbf{A})\mathbf{b} = p_{m-1}(\mathbf{A})\mathbf{b}
+    \end{equation*}
+    With $p_{m-1}$ the unique Hermite interpolant of $\mathbf{A}$ w.r.t. $\mathbf{b}$ of degree $m-1$ with $\deg(\phiAb)= m$. Then, by lemma \ref{lem:arnoldi1}, \ref{lem:arnoldi2} and \ref{lem:arnoldi3}, we have that
+    \begin{equation*}
+        f(\mathbf{A})\mathbf{b} = \|\mathbf{b}\|_2\mathbf{V}_m f(\mathbf{H}_m)\mathbf{e}_1
+    \end{equation*}
+\end{proof}
 \section{Algorithms}
 In this section, we will implement basic algorithms. From the previous section, we will distinguish two cases : 
 \begin{itemize}
@@ -336,6 +432,39 @@ In this section, we will implement basic algorithms. From the previous section, 
     \item and the case where only the matrix-vector product $f(\mathbf{A})\mathbf{b}$ is to be computed
 \end{itemize}
 \subsection{Dense case}
+First, let us consider the computation of $f(\mathbf{A})$. Meaning we put aside the matrix-vector product (for now). More specifically, our approach will be to use definition \ref{def:Hermite} to compute $f(\mathbf{A})$. All implementations are done in \texttt{Matlab 2023a}. 
+\subsubsection{Dependencies}
+We are provided with a function \texttt{hess\_and\_phi()} that computed the Hessenberg reduction of a given matrix and its associated minimal polynomial. It takes as input a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$. It then follows these simple steps:
+\begin{enumerate}
+    \item Compute the Hessenberg reduction of $\mathbf{A}$, i.e. $\mathbf{V}^*\mathbf{A}\mathbf{V} = \mathbf{H}$
+    \item It computes its Jordan Canonical Form from $\mathbf{H}$
+    \item It computes the minimal polynomial of $\mathbf{A}$, $\phi_{\mathbf{A}}$ through its Jordan Canonical Form
+    \item It returns $\mathbf{V}$, $\mathbf{H}$, $\mathbf{J}$, $\lambda_j$ (the eigenvalues of $\mathbf{A}$) and $n_i$ (the multiplicity of $\lambda_i$ in $\phi_{\mathbf{A}}$) 
+\end{enumerate}
+Note that step 2 makes perfect sense.
+\begin{theorem}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ with a Hessenberg reduction defined by $\mathbf{V}^*\mathbf{A}\mathbf{V} = \mathbf{H}$. Then $\mathbf{A}$ and $\mathbf{H}$ share the same Jordan Canonical Form.
+\end{theorem}
+\begin{proof}
+    $\mathbf{V}$ is unitary, hence $\mathbf{A}$ and $\mathbf{H}$ are similar matrices, meaning they have the same eigenvalues. Thus, they share the same Jordan Canonical Form.
+\end{proof}
+To recover the minimal polynomial of $\mathbf{A}$, one simply retrives the $\lambda_j$ and the $n_i$ from the previously described steps, and then compute the polynomial this way:
+\begin{equation*}
+    \phi_{\mathbf{A}}(t) = \prod_{i=1}^{k}(t-\lambda_k)^{n_i}
+\end{equation*}
+In the supplementary materials, you will find an implementation of this, called \texttt{construct\_minimal\_polynomial()}. One quick way to assess if the minimal polynomial is constructed correctly, is to evaluate it at $\mathbf{A}$. Taking the $\ell_2$ norm of the result should be close to zero. Here, with \texttt{test1.mat} (a 5 by 5 matrix), we obtain $\phi_{\mathbf{A}}(\mathbf{A}) = 3.3523e-12$. This is indeed numerically close to zero.
+
+For the Hermite interpolation, several options are possible. First, a routine \texttt{hermite\_interp()} is provided in the supplementary materials, it computed the Hermite interpolation by divided differences. However, I had more precise results with an alternative method proposed by Or Werner, BGU, Israel, based on the Hermite method. In the following, I used the latter approach, the routine is provided in the supplementary material aswell.
+\subsubsection{Implementation}
+From the previous elements, we can construct a routine called \texttt{matrix\_function()} that takes as input a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, and a function $f$. It has extremely simple steps:
+\begin{enumerate}
+    \item Retrieve $\lambda_j$ and $n_i$ from \texttt{hess\_and\_phi()}
+    \item Construct the matrix \texttt{FdF} which is $f$ and its derivatives evaluated at the eigenvalues of $\mathbf{A}$
+    \item Construct the Hermite interpolation of $\mathbf{A}$ with \texttt{hermite\_interp()}
+    \item Evaluate the Hermite interpolation at $\mathbf{A}$, and return the result
+\end{enumerate}
+The routine is provided in the supplementary materials.
+\subsubsection{Results}
 \section{Applications}
 \subsection{Matrix Exponential}\label{sec:matrixexp}
 Consider the simple system of ODEs
