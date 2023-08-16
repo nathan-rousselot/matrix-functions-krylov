@@ -10,7 +10,7 @@
 %%  - arielsotocaro@gmail.com
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[12pt]{article}
+\documentclass[11pt]{article}
 \usepackage{float}
 \usepackage[ruled,vlined,linesnumbered,algo2e]{algorithm2e}
 \usepackage{algorithm}
@@ -18,6 +18,7 @@
 \usepackage{amsthm}
 \usepackage{makecell}
 \usepackage{tikz}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
 \usepackage[style=authoryear, backend=biber]{biblatex}
 \bibliography{bibliography.bib}
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
@@ -36,7 +37,7 @@
 %% TITLE
 %% -----------------------------
 \title{Matrix functions} %% Assignment Title
-\author{Nathan Rousselot\\Mathematical Engineering Department\\KU Leuven}
+\author{Nathan Rousselot}
 %% Change "\today" by another date manually
 %% -----------------------------
 %% -----------------------------
@@ -48,7 +49,7 @@
 \maketitle
 
 \section{Introduction}
-In this document we introduce the notion of matrix functions. Say we have a function $f:\mathbb{C}\rightarrow\mathbb{C}$, then we can define the function $f$ on a matrix $\mathbf{A}$ as follows: $f:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$. In the following, we will first provide some theretical background on matrix function. The, we will describe the numerical issues coming with manipulating matrix functions. Finally, we will provide algorithm for efficient computation of matrix fuctions.
+In this document we introduce the notion of matrix functions. Say we have a function $f:\mathbb{C}\rightarrow\mathbb{C}$, then we can define the function $f$ on a matrix $\mathbf{A}$ as follows: $f:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$. In the following, we will first provide some theoretical background on matrix functions. Then, we will describe the numerical issues coming with manipulating matrix functions. Finally, we will provide algorithm for efficient computation of matrix fuctions.
 
 \section{Theoretical background}
 \subsection{Natural Definition}
@@ -126,7 +127,7 @@ For the matrix case, we need to ensure convergence (similarly to power series), 
 \begin{equation}
     f(\mathbf{A}) = \sum_{k=-d}^d c_k \mathbf{A}^k
 \end{equation}
-\subsection{Spectum-Based Definition}
+\subsection{Spectrum-Based Definition}
 \subsubsection*{Diagonalizable Matrices}
 Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ be a diagonalizable matrix. That means that there exists a matrix $\mathbf{V}\in\mathbb{C}^{n\times n}$ such that $\mathbf{V}$ is invertible, and $\mathbf{A} = \mathbf{V}\mathbf{\Lambda}\mathbf{V}^{-1}$, where $\mathbf{\Lambda}$ is a diagonal matrix containing the eigenvalues of $\mathbf{A}$ :
 \begin{equation}

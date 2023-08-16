@@ -12,3 +12,7 @@ paper/matrix-functions.bbl
 paper/matrix-functions.bcf
 paper/matrix-functions.blg
 paper/matrix-functions.run.xml
+src/hermitePoly.asv
+src/matrix_function.asv
+src/test1.asv
+src/dwt.data
