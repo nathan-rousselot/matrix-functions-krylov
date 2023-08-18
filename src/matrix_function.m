@@ -28,6 +28,8 @@ function F = matrix_function(fun,A)
 % F = matrix_function(@(x) sin(x), [1, 2; 3, 4]);
 %
 % This will compute the matrix sine of the matrix [1, 2; 3, 4] and store the result in F.
+%
+% Author: Nathan Rousselot
 
     [~,lambda,m,~,~]=hess_and_phi(A);
     M = max(m)+1;

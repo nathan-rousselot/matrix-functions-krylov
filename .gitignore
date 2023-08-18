@@ -16,3 +16,5 @@ src/hermitePoly.asv
 src/matrix_function.asv
 src/test1.asv
 src/dwt.data
+src/fAb.asv
+src/test_fab.asv
