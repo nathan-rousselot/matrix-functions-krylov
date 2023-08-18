@@ -18,7 +18,7 @@
 \usepackage{amsthm}
 \usepackage{makecell}
 \usepackage{tikz}
-\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage[a4paper, total={6.5in, 9in}]{geometry}
 \usepackage[style=authoryear, backend=biber]{biblatex}
 \bibliography{bibliography.bib}
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
@@ -170,7 +170,7 @@ where $\mathbf{J}$ is a Jordan matrix, and $\mathbf{V}$ is a matrix containing t
         0 & 0 & \cdots & 0 & \lambda
     \end{bmatrix}
 \end{equation}
-\begin{theorem}
+\begin{theorem}\label{thm:jordan}
     Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ be a defective matrix. Then we can define the function $f(\mathbf{A})$ as:
     \begin{equation}
         f(\mathbf{A}) := \mathbf{V}f(\mathbf{J})\mathbf{V}^{-1}
@@ -466,12 +466,56 @@ From the previous elements, we can construct a routine called \texttt{matrix\_fu
 \end{enumerate}
 The routine is provided in the supplementary materials.
 \subsubsection{Results}
+In this part, we will compare the performance of our routine \texttt{matrix\_function()} with the built-in \texttt{funm()} function from \texttt{Matlab}. The built-in Matlab function uses a Schur-Parlett algorithm from \cite{davies2003schur}.
 \section{Applications}
 \subsection{Matrix Exponential}\label{sec:matrixexp}
 Consider the simple system of ODEs
 \begin{equation}\label{eq:ode}
     \frac{d\mathbf{x}}{dt} = \mathbf{A}\mathbf{x}
 \end{equation}
-with initial condition $\mathbf{x}(0) = \mathbf{x}_0\in\mathbb{R}^n$. Then we know the solution to be given by $\mathbf{x}(t)=e^{At}\mathbf{x}_0$. However, for all but the stablest systems, this is not a good method, due to issues such as stability and stiffness.
+with initial condition $\mathbf{x}(0) = \mathbf{x}_0\in\mathbb{R}^n$. Then we know the solution to be given by $\mathbf{x}(t)=e^{\mathbf{A}t}\mathbf{x}_0$. However, for all but the stablest systems, this is not a good method, due to issues such as stability and stiffness. Here we consider for instance the 2D convection-diffusion equation for the flow $\mathbf{u}(x,y)$:
+$$\frac{d \mathbf{u}}{d t}=\epsilon\Delta\mathbf{u}+\alpha\cdot\nabla\mathbf{u}$$
+with Dirichlet boundary conditions and $\epsilon\in\mathbb{R}^{+}_0$ and $\alpha\in\mathbb{R}^2$. Simple time-stepping methods are known to be unstable at large time-steps, and our exponential scheme suffers from similar problems, i.e. $t$ cannot be taken too large.
+\subsection{The sign function}
+In control theory we are often interested in the eigenvalues $\lambda$ of system matrices with $Re(\lambda)>0$, since they correspond to unstable poles. In the design of controllers it is therefore interesting to have an efficient way to count the number of eigenvalues of a matrix in the right half-plane $Re(z)>0$. Here we will build such a method.
+\begin{theorem}\label{thm:sign}
+Let $\mathbf{A}\in\mathbb{C}^{n \times n}$ be a matrix with $k_{-}$ eigenvalues in the left plane, $k_{+}$ eigenvalues in the right plane and none on the imaginary axis, counting multiplicity. Let $\text{sgn}:\mathbb{C}\mapsto \{1,-1\}$ be defined by
+$$\text{sgn}(z)= \begin{cases} 
+      1 & Re(z)\geq 0 \\
+      -1 & Re(z)<0. 
+   \end{cases}
+$$
+Then $\text{trace}(\text{sgn}(\mathbf{A}))=k_{+}-k_{-}$.
+\end{theorem}
+\begin{proof}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$. To stay in a very general scenario, and consider cases where $\mathbf{A}$, let us consider its Jordan Canonical Form :
+    \begin{equation*}
+        \mathbf{A} = \mathbf{VJV}^{-1}
+    \end{equation*} 
+    Recall that by theorem \ref{thm:jordan}, consider $f$ a function, then 
+    \begin{equation*}
+        f(\mathbf{A}) = \mathbf{V}f(\mathbf{J})\mathbf{V}^{-1}
+    \end{equation*}
+    Thus let us consider the decomposition where 
+    \begin{equation*}
+        \mathbf{J} = \begin{pmatrix}
+            \mathbf{J}_{k_+} & 0 \\ 0 & \mathbf{J}_{k_-}
+        \end{pmatrix}
+    \end{equation*}
+    such that $\mathbf{J}_{k_+}$ has $k_+$ eigenvalues in the right plane, and $\mathbf{J}_{k_-}$ has $k_-$ eigenvalues in the left plane. Then, we have that
+    \begin{equation*}
+        \text{sgn}(\mathbf{J}) = \begin{pmatrix}
+            \mathbf{I}_{k_+} & 0 \\ 0 & -\mathbf{I}_{k_-}
+        \end{pmatrix}
+    \end{equation*}
+    where $\mathbf{I}_n$ is the identity matrix of size $n$. Then, we have that
+    \begin{equation*}
+        \text{trace}(\text{sgn}(\mathbf{J})) = k_+ - k_-
+    \end{equation*}
+    And thus, we have that
+    \begin{equation*}
+        \text{trace}(\text{sgn}(\mathbf{A})) = \text{trace}(\text{sgn}(\mathbf{VJV}^{-1})) = \mathbf{V}\text{trace}(\text{sgn}(\mathbf{J}))\mathbf{V}^{-1} = (k_+-k_-)\mathbf{V}\mathbf{V}^{-1} = k_+ - k_-
+    \end{equation*}
+\end{proof}
 \printbibliography
 \end{document}
