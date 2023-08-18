@@ -1,0 +1,93 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=.85\linewidth,
+height=4cm,
+at={(0in,0in)},
+scale only axis,
+xmin=2,
+xmax=15,
+xlabel style={font=\color{white!15!black}},
+xlabel={Size of the matrices},
+ymode=log,
+ymin=1e-16,
+ymax=0.0001,
+yminorticks=true,
+ylabel style={font=\color{white!15!black}},
+%ylabel={Relative Error},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Exponenial function},
+xmajorgrids,
+ymajorgrids,
+yminorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=black, dashed]
+  table[row sep=crcr]{%
+1	0\\
+2	1.71624878976539e-16\\
+3	1.22024250623032e-16\\
+4	1.86764659618892e-16\\
+5	1.68361863632822e-16\\
+6	1.20424787755581e-16\\
+7	2.02522198739353e-16\\
+8	1.69083627914502e-16\\
+9	1.78878188543304e-16\\
+10	4.37883232600663e-15\\
+11	2.62205407924652e-11\\
+12	7.55548252824038e-07\\
+13	4.08147804640456e-08\\
+14	2.54902728221652e-07\\
+15	1.54338995955608e-06\\
+};
+%\addlegendentry{diagonal}
+
+\addplot [color=black, mark=asterisk, mark options={solid, black}]
+  table[row sep=crcr]{%
+1	0\\
+2	1.34551194988101e-16\\
+3	8.56940672084931e-16\\
+4	3.71431920865263e-15\\
+5	6.43853140792487e-16\\
+6	3.07364008605186e-15\\
+7	2.17447874006037e-15\\
+8	1.80680598636716e-15\\
+9	4.18315732440152e-16\\
+10	4.08961300873358e-16\\
+11	3.83448312676478e-15\\
+12	1.77593347794744e-13\\
+13	5.61443457608614e-12\\
+14	5.25277002444549e-10\\
+15	1.55722814732103e-07\\
+};
+%\addlegendentry{symmetric}
+
+\addplot [color=black]
+  table[row sep=crcr]{%
+1	0\\
+2	1.40422527187022e-16\\
+3	9.78212455490046e-16\\
+4	8.14581110397033e-16\\
+5	5.04209119228841e-15\\
+6	1.59210015961528e-15\\
+7	1.07228002023245e-15\\
+8	2.12873989764519e-15\\
+9	4.11404419473943e-15\\
+10	3.79263905604626e-15\\
+11	5.22236059957374e-16\\
+12	4.37354475237039e-15\\
+13	1.88271014260457e-13\\
+14	6.79585192457534e-10\\
+15	1.52106181005324e-07\\
+};
+%\addlegendentry{dense}
+
+\end{axis}
+\end{tikzpicture}%

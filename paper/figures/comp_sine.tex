@@ -1,0 +1,93 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=.85\linewidth,
+height=4cm,
+at={(0in,0in)},
+scale only axis,
+xmin=2,
+xmax=15,
+xlabel style={font=\color{white!15!black}},
+xlabel={Size of the matrices},
+ymode=log,
+ymin=1e-16,
+ymax=1,
+yminorticks=true,
+ylabel style={font=\color{white!15!black}},
+ylabel={Relative Error},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Sine function},
+xmajorgrids,
+ymajorgrids,
+yminorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=black, dashed]
+  table[row sep=crcr]{%
+1	0\\
+2	0\\
+3	0\\
+4	1.45725786217287e-16\\
+5	1.34599448599507e-16\\
+6	1.93288933939941e-16\\
+7	0\\
+8	1.34996517212839e-16\\
+9	2.8139452012619e-16\\
+10	6.73147337595159e-16\\
+11	1.03032779116962e-12\\
+12	5.78744177027967e-07\\
+13	9.553747250617e-08\\
+14	4.39017470636033e-07\\
+15	5.28442449627079e-08\\
+};
+%\addlegendentry{diagonal}
+
+\addplot [color=black, mark=asterisk, mark options={solid, black}]
+  table[row sep=crcr]{%
+1	0\\
+2	2.13550872140361e-16\\
+3	1.16425372303465e-15\\
+4	2.19221444950359e-15\\
+5	3.61672445574946e-15\\
+6	9.72750676886519e-15\\
+7	8.29608424074529e-14\\
+8	4.56885037269095e-14\\
+9	2.35417884883477e-13\\
+10	1.52796832107972e-12\\
+11	5.06284131371555e-12\\
+12	1.20831615925066e-08\\
+13	1.15240427666526e-05\\
+14	0.000671713459124643\\
+15	0.837016575460994\\
+};
+%\addlegendentry{symmetric}
+
+\addplot [color=black]
+  table[row sep=crcr]{%
+1	0\\
+2	1.51944372493216e-16\\
+3	3.48056882596735e-16\\
+4	1.33057104500803e-15\\
+5	1.73250362957786e-15\\
+6	1.99001209845091e-15\\
+7	3.0020193056546e-15\\
+8	1.43307608835298e-15\\
+9	4.27119186288929e-15\\
+10	8.62089393846284e-15\\
+11	8.69296395513068e-15\\
+12	1.16168249112529e-13\\
+13	1.20836095810293e-09\\
+14	3.76245413376949e-07\\
+15	0.000244683076230114\\
+};
+%\addlegendentry{dense}
+
+\end{axis}
+\end{tikzpicture}%

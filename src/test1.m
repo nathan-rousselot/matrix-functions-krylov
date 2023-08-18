@@ -64,11 +64,11 @@ for j = 1:length(test_matrices)
 end
 
 figure;
-semilogy(err_diag(:,1))
+semilogy(err_diag(:,1),'k--')
 hold on
-semilogy(err_sym(:,1))
+semilogy(err_sym(:,1),'k-*')
 hold on
-semilogy(err_dens(:,1))
+semilogy(err_dens(:,1),'k')
 legend('diagonal','symmetric','dense')
 xlabel('Size of the matrices')
 ylabel('Relative Error')
@@ -76,11 +76,11 @@ title('Cosine function')
 grid on
 
 figure;
-semilogy(err_diag(:,2))
+semilogy(err_diag(:,2),'k--')
 hold on
-semilogy(err_sym(:,2))
+semilogy(err_sym(:,2),'k-*')
 hold on
-semilogy(err_dens(:,2))
+semilogy(err_dens(:,2),'k')
 legend('diagonal','symmetric','dense')
 xlabel('Size of the matrices')
 ylabel('Relative Error')
@@ -88,11 +88,11 @@ title('Cosine function')
 grid on
 
 figure;
-semilogy(err_diag(:,3))
+semilogy(err_diag(:,3),'k--')
 hold on
-semilogy(err_sym(:,3))
+semilogy(err_sym(:,3),'k-*')
 hold on
-semilogy(err_dens(:,3))
+semilogy(err_dens(:,3),'k')
 legend('diagonal','symmetric','dense')
 xlabel('Size of the matrices')
 ylabel('Relative Error')

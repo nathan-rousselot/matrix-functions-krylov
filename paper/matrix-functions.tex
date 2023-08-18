@@ -31,6 +31,16 @@
 \newtheorem{definition}{Definition}
 \newtheorem{corollary}{Corollary}[theorem]
 
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+  %% the following commands are needed for some matlab2tikz features
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{arrows.meta}
+\usepgfplotslibrary{patchplots}
+\usepackage{grffile}
+\usepackage{amsmath}
+\usepackage{subcaption}
+
 \renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
 
 %% -----------------------------
@@ -466,7 +476,31 @@ From the previous elements, we can construct a routine called \texttt{matrix\_fu
 \end{enumerate}
 The routine is provided in the supplementary materials.
 \subsubsection{Results}
-In this part, we will compare the performance of our routine \texttt{matrix\_function()} with the built-in \texttt{funm()} function from \texttt{Matlab}. The built-in Matlab function uses a Schur-Parlett algorithm from \cite{davies2003schur}.
+In this part, we will compare the performance of our routine \texttt{matrix\_function()} with the built-in \texttt{funm()} function from \texttt{Matlab}. The built-in Matlab function uses a Schur-Parlett algorithm from \cite{davies2003schur}. To compare both methods, we generate three types of matrices of different sizes. More precisely, we will investigate both algorithm's performances on symmetric, diagonal and dense matrices, on the following functions: cosine, sine and exponential.
+\begin{figure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \input{figures/comp_sine}
+        \caption{}
+        \label{fig:comp_sine}
+    \end{subfigure}\hspace{.055\linewidth}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \input{figures/comp_cosine}
+        \caption{}
+        \label{fig:comp_cosine}
+    \end{subfigure}\hspace{.025\linewidth}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \input{figures/comp_exp}
+        \caption{}
+        \label{fig:comp_exp}
+    \end{subfigure}
+    \caption{Measure of performance of the algorithm to compute $f(\mathbf{A})$ according to definition \ref{def:Hermite}. We assume that \cite{davies2003schur} (Schur Parlett) algorithm is correct, and we measure the relative error. We compare the performance of our algorithm on several types of matrices : diagonal (- -), symmetric (-*) and dense (--). Matrix coefficients are randomly filled such that for all non-zero entry: $a_{ij}\sim\mathcal{U}(0,1)$, this ensures $\mathbf{A}$ is full rank. We test it on three different functions : Sine (a), Cosine (b) and Exponenial (c). We note that starting from a certain matrix size, the algorithm lose considerably in performance.}
+    \label{fig:comp}
+\end{figure}
+
+Figure \ref{fig:comp} illustrate the result of the measurement of performance of the algorithm. The relative error between \cite{davies2003schur} and our results is computed:
+\begin{equation*}
+    \text{relative error} = \frac{\|f(\mathbf{A})-\texttt{funm}(\mathbf{A},f)\|_2}{\|\texttt{funm}(\mathbf{A},f\|_2}
+\end{equation*}
 \section{Applications}
 \subsection{Matrix Exponential}\label{sec:matrixexp}
 Consider the simple system of ODEs
