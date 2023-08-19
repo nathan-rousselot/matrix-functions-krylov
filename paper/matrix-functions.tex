@@ -46,7 +46,7 @@
 %% -----------------------------
 %% TITLE
 %% -----------------------------
-\title{Matrix functions} %% Assignment Title
+\title{Note on Matrix functions} %% Assignment Title
 \author{Nathan Rousselot}
 %% Change "\today" by another date manually
 %% -----------------------------
@@ -497,10 +497,28 @@ In this part, we will compare the performance of our routine \texttt{matrix\_fun
     \label{fig:comp}
 \end{figure}
 
-Figure \ref{fig:comp} illustrate the result of the measurement of performance of the algorithm. The relative error between \cite{davies2003schur} and our results is computed:
+Figure \ref{fig:comp} illustrates the result of the measurement of performance of the algorithm. The relative error between \cite{davies2003schur} and our results is computed:
 \begin{equation*}
     \text{relative error} = \frac{\|f(\mathbf{A})-\texttt{funm}(\mathbf{A},f)\|_2}{\|\texttt{funm}(\mathbf{A},f\|_2}
 \end{equation*}
+We note that for small matrices ($n\leq 10$), the hermite interpolation approach is precise and has residual error inferior to $10^{-11}$, which is somewhat close to numerical precision (around $10^{-16}$ as we work with double precision). However, starting from a certain matrix size, the algorithm loses considerably in performance: both in precision and in computation time. Interestingly, this behavior is independant to the matrix structure : diagonal, symmetric or dense. It also seem to be independant to the function we are evaluating (though we has slightly lower relative error for the exponential function as depicted in figure \ref{fig:comp_exp}).
+
+We conclude that this algorithm, while being elegant, is quickly inefficient, and lead to both numerical and computational issues, even at small matrix sizes.
+
+\subsection{Matrix-vector product}
+In this section, we will implement the matrix-vector product $f(\mathbf{A})\mathbf{b}$, as described in section \ref{sec:fabintro}. We will use the Arnoldi method to achieve this. The implementation is done in \texttt{Matlab 2023a}. As the theory has been well described in section \ref{sec:fabintro}, the implementation is straight-forward :
+\begin{algorithm2e}
+    \SetAlgoLined
+    \KwData{$\mathbf{A} \in \mathbb{C}^{n \times n}$, $\mathbf{b} \in \mathbb{C}^n$, $f$ a function and $k\in\mathbb{N}$ the dimension of the Krylov subspace}
+    \KwResult{$f(\mathbf{A})\mathbf{b}$}
+    \caption{Matrix-Vector Product}
+    $\mathbf{v}_1 \gets \mathbf{b}/\|\mathbf{b}\|_2$\;
+    $[\mathbf{V},\mathbf{H}] \gets$ \texttt{arnoldi}($\mathbf{A},\mathbf{v}_1,k$)\;
+    $e_1 \gets$ first column of the identity matrix\;
+    $f \gets \|b\|_2\mathbf{V}f(\mathbf{H})\mathbf{e}_1$\;
+\end{algorithm2e}
+
+Where \texttt{arnoldi()} is the Arnoldi iteration described in algorithm \ref{alg:arnoldi}. This routine is provided in the supplementary materials.
 \section{Applications}
 \subsection{Matrix Exponential}\label{sec:matrixexp}
 Consider the simple system of ODEs
