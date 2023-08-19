@@ -41,7 +41,7 @@
 \usepackage{amsmath}
 \usepackage{subcaption}
 
-\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
+\numberwithin{equation}{section}
 
 %% -----------------------------
 %% TITLE
@@ -343,7 +343,7 @@ The Arnoldi method is a reduction method that allows low-rank approximation of a
     with $\mathbf{V}_k\in\mathbb{C}^{n\times k}$ unitary, and $\mathbf{H}_k\in\mathbb{C}^{k\times k}$ upper Hessenberg. That means that $\mathbf{H}_k$ is the orthogonal projection of $\mathbf{A}$ onto the $k$th Krylov subspace $\mathcal{K}_k(\mathbf{A},\mathbf{v_1})$, with $\mathbf{v_1}$ the first column of $\mathbf{V}$.
 \end{definition}
 The Arnoldi method is an iterative method, following this algorithm:
-\begin{algorithm2e}\label{alg:arnoldi}
+\begin{algorithm2e}
     \SetAlgoLined
     \KwData{$A \in \mathbb{C}^{n \times n}$, $v_1 \in \mathbb{C}^n$ a unit vector in the chosen norm (line 7)}
     \KwResult{$H_n \in \mathbb{C}^{n\times n}$}
@@ -360,6 +360,7 @@ The Arnoldi method is an iterative method, following this algorithm:
         }
         $\mathbf{v_{k+1}} \gets \mathbf{w}/h_{k+1,k}$
     }
+    %\label{alg:arnoldi}
     \label{alg:arnoldi}
 \end{algorithm2e}
 
@@ -506,6 +507,7 @@ We note that for small matrices ($n\leq 10$), the hermite interpolation approach
 We conclude that this algorithm, while being elegant, is quickly inefficient, and lead to both numerical and computational issues, even at small matrix sizes.
 
 \subsection{Matrix-vector product}
+\subsubsection{Implementation}
 In this section, we will implement the matrix-vector product $f(\mathbf{A})\mathbf{b}$, as described in section \ref{sec:fabintro}. We will use the Arnoldi method to achieve this. The implementation is done in \texttt{Matlab 2023a}. As the theory has been well described in section \ref{sec:fabintro}, the implementation is straight-forward :
 \begin{algorithm2e}
     \SetAlgoLined
@@ -519,6 +521,23 @@ In this section, we will implement the matrix-vector product $f(\mathbf{A})\math
 \end{algorithm2e}
 
 Where \texttt{arnoldi()} is the Arnoldi iteration described in algorithm \ref{alg:arnoldi}. This routine is provided in the supplementary materials.
+
+\subsubsection{Results}
+To evaluate the performance of this Matri-vector product routine, we will test it versus the naive way of doing it in \texttt{Matlab}, meaning computing $f(\mathbf{A})$ explicitely, then multiplying it by $\mathbf{b}$.
+\begin{figure}
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/comp_fab_pattern.tex}
+        \caption{}
+        \label{fig:comp_fab_pattern}
+    \end{subfigure}
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/comp_fab_assignement.tex}
+        \caption{}
+        \label{fig:comp_fab_assignement}
+    \end{subfigure}
+    \caption{Evaluation of the performance of the matrix-vector product routine. We compare the performance of our method against the naive way of doing it in \texttt{Matlab}. We test it on three different functions : Sine (- -), Cosine (-*) and Exponenial (--) on figure (b). Those functions are applied to a large matrix $\mathbf{A}$ with sparisity pattern given in (a). Our method allows for precise approximation of $f(\mathbf{A})b$ even when working on a very low rank Hessenberg reduction (b).}
+\end{figure}
+
 \section{Applications}
 \subsection{Matrix Exponential}\label{sec:matrixexp}
 Consider the simple system of ODEs
