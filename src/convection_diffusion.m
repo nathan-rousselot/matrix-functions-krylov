@@ -28,9 +28,7 @@ end
 u=zeros(n*n,10);
 u(:,1)=u0;
 for i = 1:9
-[H,Q] = arnoldi(A,u(:,i),20);
-eH = expm(dt*H);
-u(:,i+1) = Q*(eH*((Q'*u(:,i))));
+u(:,i+1) = fAb(@expm,dt*A,u(:,i),1);
 end
 
 %%

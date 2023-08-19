@@ -523,7 +523,11 @@ In this section, we will implement the matrix-vector product $f(\mathbf{A})\math
 Where \texttt{arnoldi()} is the Arnoldi iteration described in algorithm \ref{alg:arnoldi}. This routine is provided in the supplementary materials.
 
 \subsubsection{Results}
-To evaluate the performance of this Matri-vector product routine, we will test it versus the naive way of doing it in \texttt{Matlab}, meaning computing $f(\mathbf{A})$ explicitely, then multiplying it by $\mathbf{b}$.
+To evaluate the performance of this Matrix-vector product routine, we will test it versus the naive way of doing it in \texttt{Matlab}, meaning computing $f(\mathbf{A})$ explicitely, then multiplying it by $\mathbf{b}$. In our first experiment (figure \ref{fig:comp_fab}), where $\mathbf{A}$ is a large sparse matrix. More specifically it is a graded L-shape pattern from \cite{george1978automatic}. The vector $\mathbf{b}$ is filled with uniformly distributed random coefficients such that $b_i\sim\mathcal{U}(0,1)$. The figure \ref{fig:comp_fab_assignement} shows that for such a setup, the proposed algorithm reaches a relative error equals to numerical precision few iterations afters 20. This means 
+\begin{equation*}
+    \frac{\|\|\mathbf{b}\|_2\mathbf{V}_k f(\mathbf{H}_k)\mathbf{e}_1 - f(\mathbf{A})\mathbf{b}\|_2}{\|f(\mathbf{A})\mathbf{b}\|_2} = \epsilon
+\end{equation*}
+for $k > 20$, and where $\epsilon$ is the machine precision. Note that this result is very specific to the problem depicted in figure \ref{fig:comp_fab}, and the threshold for $k$ will differ in function of the considered problem. Another interpretation is that computing $f(\mathbf{A})\mathbf{b}$ on the smaller Krylov subspace $\mathcal{K}_k(\mathbf{A},\mathbf{b})$ gives extremely good results, even when $k << n$. 
 \begin{figure}
     \begin{subfigure}[b]{.45\linewidth}
         \input{figures/comp_fab_pattern.tex}
@@ -535,8 +539,48 @@ To evaluate the performance of this Matri-vector product routine, we will test i
         \caption{}
         \label{fig:comp_fab_assignement}
     \end{subfigure}
-    \caption{Evaluation of the performance of the matrix-vector product routine. We compare the performance of our method against the naive way of doing it in \texttt{Matlab}. We test it on three different functions : Sine (- -), Cosine (-*) and Exponenial (--) on figure (b). Those functions are applied to a large matrix $\mathbf{A}$ with sparisity pattern given in (a). Our method allows for precise approximation of $f(\mathbf{A})b$ even when working on a very low rank Hessenberg reduction (b).}
+    \caption{Evaluation of the performance of the matrix-vector product routine. We compare the performance of our method against the naive way of doing it in \texttt{Matlab}. We test it on three different functions : Sine (- -), Cosine (-*) and Exponenial (--) on figure (b). Those functions are applied to a large matrix $\mathbf{A}$ with sparisity pattern given in (a). Our method allows for precise approximation of $f(\mathbf{A})b$ even when working on a very low rank Hessenberg reduction (b). The vector $\mathbf{b}$ is a random vector whose coefficients are uniformly distributed such that $b_i\sim\mathcal{U}(0,1)$.}
+    \label{fig:comp_fab}
 \end{figure}
+
+Obviously, this very interesting result lets us think that there is a lot of potential computational gain in evaluating $f(\mathbf{A})\mathbf{b}$ on this smaller Krylov subspace. The computational gain for the problem solved in figure \ref{fig:comp_fab} is described in Table \ref{tab:fab}. We note that for this problem, our method considerably outperforms the naive approach of evaluating $f(\mathbf{A})$ seperately, regardless of the function (though the biggest gain seem to come from the matrix exponential). 
+
+However, this does not give us any insight about how those two algorithms sacle up or down. To investigate this, we will use the BCSPWR matrix collection. This collection contains matrices of different sizes, and different sparsity patterns. We will test our method against the naive approach on this collection. The results are depicted in Table \ref{tab:fab2}. We notice that for very low dimension ($n < 300$) the naive approach slightly outperforms ours for trigonometric functions. However, for larger matrices, and for the exponential function, working in the Kryloc subspace is the way to go. For the largest matrix, where $n=5300$, the naive approach takes half a minute, while our method takes less than a tenth of a second. This is a considerable gain in performance, and could be crucial in some applications. As this margin increases with the matrix size, we can expect our method to be even more efficient for larger matrices.
+
+\begin{table}
+    \centering
+    \caption{Comparison of computational performance of both methods for evaluating $f(\mathbf{A}\mathbf{b})$ with $\mathbf{A}$ the matrix in \ref{fig:comp_fab_pattern}. Performance was measured in ms. Optimal $k$ was determined when the relative error went below $1e-14$, as we worked on double precision. Tests were run on an Intel Core i7-1185G7 @ 3.00GHz with 16GB RAM. We note that for this problem, our method is outperforming by a significant margin the naive approach.}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{fun} & \textbf{Naive way (ms)} & \textbf{Krylov method (ms)} & \textbf{Optimal $k$} \\\hline
+        \texttt{exp()} & 151.2 & 6.3 & 21 \\ \hline
+        \texttt{cos()} & 121.8 & 11.2 & 23 \\ \hline
+        \texttt{sin()} & 112.6 & 8.1 & 23 \\
+        \hline
+    \end{tabular}
+    \label{tab:fab}
+\end{table}
+
+\begin{table}
+    \centering
+    \caption{Comparison of the naive approach and the Krylov approach on BCSPWR matrix collection. Performance was measured in ms. Optimal $k$ was determined when the relative error went below $1e-14$.}
+    \begin{tabular}{|c|c||c|c|c|c|c|c|}
+        \hline
+        Matrix & $n$ & \multicolumn{2}{|c|}{\texttt{exp()}} & \multicolumn{2}{|c|}{\texttt{cos()}} & \multicolumn{2}{|c|}{\texttt{sin()}} \\\hline
+        & & Naive & Krylov & Naive & Krylov & Naive & Krylov \\\hline
+        BCSPWR01 & 39 & \textbf{1.0} & 1.3 & \textbf{0.55} & 1.5 & \textbf{0.38} & 5.3\\\hline
+        BCSPWR02 & 49 & 3.2 & \textbf{1.9} & \textbf{0.66} & 3.7 & \textbf{0.48} & 1.6\\\hline
+        BCSPWR03 & 118 & 16.6 & \textbf{2.3} & \textbf{1.3} & 3.0 & \textbf{0.87} & 3.1\\\hline
+        BCSPWR04 & 274 & 6.5 & \textbf{1.6} & \textbf{5.2} & 8.7 & \textbf{5.9} & 6.4\\\hline
+        BCSPWR05 & 443 & 26.4 & \textbf{2.7} & 21.8 & \textbf{4.6} & 21.5 & \textbf{3.6}\\\hline
+        BCSPWR06 & 1454 & 436.6 & \textbf{11.9} & 299.6 & \textbf{10.3} & 399.6 & \textbf{12.1}\\\hline
+        BCSPWR07 & 1612 & 484.0 & \textbf{11.9} & 392.0 & \textbf{14.7} & 393.2 & \textbf{14.7}\\\hline
+        BCSPWR08 & 1624 & 504.4 & \textbf{13.4} & 414.5 & \textbf{12.4} & 433.8 & \textbf{14.6}\\\hline
+        BCSPWR09 & 1723 & 628.1 & \textbf{11.7} & 593.7 & \textbf{10.3} & 531.8 & \textbf{10.1}\\\hline
+        BCSPWR10 & 5300 & 32868 & \textbf{98.4} & 27447 & \textbf{96.7} & 23948 & \textbf{89.7}\\\hline
+    \end{tabular}
+    \label{tab:fab2}
+\end{table}
 
 \section{Applications}
 \subsection{Matrix Exponential}\label{sec:matrixexp}
