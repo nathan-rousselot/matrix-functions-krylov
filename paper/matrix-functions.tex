@@ -41,6 +41,10 @@
 \usepackage{amsmath}
 \usepackage{subcaption}
 
+\usepgfplotslibrary{external} 
+\tikzexternalize
+
+
 \numberwithin{equation}{section}
 
 %% -----------------------------
@@ -545,7 +549,7 @@ for $k > 20$, and where $\epsilon$ is the machine precision. Note that this resu
 
 Obviously, this very interesting result lets us think that there is a lot of potential computational gain in evaluating $f(\mathbf{A})\mathbf{b}$ on this smaller Krylov subspace. The computational gain for the problem solved in figure \ref{fig:comp_fab} is described in Table \ref{tab:fab}. We note that for this problem, our method considerably outperforms the naive approach of evaluating $f(\mathbf{A})$ seperately, regardless of the function (though the biggest gain seem to come from the matrix exponential). 
 
-However, this does not give us any insight about how those two algorithms sacle up or down. To investigate this, we will use the BCSPWR matrix collection. This collection contains matrices of different sizes, and different sparsity patterns. We will test our method against the naive approach on this collection. The results are depicted in Table \ref{tab:fab2}. We notice that for very low dimension ($n < 300$) the naive approach slightly outperforms ours for trigonometric functions. However, for larger matrices, and for the exponential function, working in the Kryloc subspace is the way to go. For the largest matrix, where $n=5300$, the naive approach takes half a minute, while our method takes less than a tenth of a second. This is a considerable gain in performance, and could be crucial in some applications. As this margin increases with the matrix size, we can expect our method to be even more efficient for larger matrices.
+However, this does not give us any insight about how those two algorithms sacle up or down. To investigate this, we will use the BCSPWR matrix collection. This collection contains matrices of different sizes, and different sparsity patterns. We will test our method against the naive approach on this collection. The results are depicted in Table \ref{tab:fab2}. We notice that for very low dimension ($n < 300$) the naive approach slightly outperforms ours for trigonometric functions. However, for larger matrices, and for the exponential function, working in the Kryloc subspace is the way to go. For the largest matrix, where $n=5300$, the naive approach takes half a minute, while our method takes less than a tenth of a second. This is a considerable gain in performance, and could be crucial in some applications. As this margin increases with the matrix size, we can expect our method to be even more efficient for larger matrices. One final interesting note, is that the optimal Krylov space dimension does not change much with the matrix size. This is a very interesting result, as it means that we can expect our method to be efficient for a wide range of matrix sizes, and explains why it does not suffer from scaling up ($f(\mathbf{H_k})$, which is the costly operation, is somewhat the same size whatever the tested matrix).
 
 \begin{table}
     \centering
@@ -583,14 +587,62 @@ However, this does not give us any insight about how those two algorithms sacle 
 \end{table}
 
 \section{Applications}
+In this section, we will try to apply the previously mentionned algorithm to more practical problems. We will see how to take advantage of problem's nature thanks to those tools in order to solve them with more efficiency.
 \subsection{Matrix Exponential}\label{sec:matrixexp}
+\subsubsection{Context}
 Consider the simple system of ODEs
 \begin{equation}\label{eq:ode}
     \frac{d\mathbf{x}}{dt} = \mathbf{A}\mathbf{x}
 \end{equation}
 with initial condition $\mathbf{x}(0) = \mathbf{x}_0\in\mathbb{R}^n$. Then we know the solution to be given by $\mathbf{x}(t)=e^{\mathbf{A}t}\mathbf{x}_0$. However, for all but the stablest systems, this is not a good method, due to issues such as stability and stiffness. Here we consider for instance the 2D convection-diffusion equation for the flow $\mathbf{u}(x,y)$:
-$$\frac{d \mathbf{u}}{d t}=\epsilon\Delta\mathbf{u}+\alpha\cdot\nabla\mathbf{u}$$
-with Dirichlet boundary conditions and $\epsilon\in\mathbb{R}^{+}_0$ and $\alpha\in\mathbb{R}^2$. Simple time-stepping methods are known to be unstable at large time-steps, and our exponential scheme suffers from similar problems, i.e. $t$ cannot be taken too large.
+\begin{equation}\label{eq:convectiondiffusion}
+    \frac{d \mathbf{u}}{d t}=\epsilon\Delta\mathbf{u}+\alpha\cdot\nabla\mathbf{u}
+\end{equation}
+with Dirichlet boundary conditions and $\epsilon\in\mathbb{R}^{+}_0$ and $\alpha\in\mathbb{R}^2$. Simple time-stepping methods are known to be unstable at large time-steps, and our exponential scheme suffers from similar problems, i.e. $t$ cannot be taken too large. However, it remains an interesting subject to evaluate the impact of using appropriate routines to compute $\mathbf{x}(t)$.
+
+The convection-diffusion equation (equation \ref{eq:convectiondiffusion}) is split in two parts. First, a diffusion term $\epsilon\Delta\mathbf{u}$, and a convection term $\alpha\cdot\nabla\mathbf{u}$. The variable $\epsilon$ is the diffusivity and $\alpha$ the velocity. The ODE is formed by discretizing the 2D convection-diffusion equation using a finite difference scheme. The discrete Laplacian and gradient operators (L and D in the routine) represent diffusion and convection, respectively. The domain is discretized using a uniform grid with finite difference methods. For the Laplacian, a central difference is used, and for the gradient, a forward difference is used. The matrix $\mathbf{A}$ is then formed by combining the two discretized operators, and the solution is formed :
+\begin{equation}\label{eq:odesolution}
+    \mathbf{u}(t) = e^{\mathbf{A}t}\mathbf{u}_0
+\end{equation}
+Note that this equation (\ref{eq:convectiondiffusion}) is a simple case of convection-diffusion where it is assumed that $\epsilon$ is constant, and that there are no sources or sinks (else it would make the equation slightly more complex). 
+
+We notice that the solution (equation \ref{eq:odesolution}) is a simple matrix-vector product $f(\mathbf{A})\mathbf{b}$ where $f() := \exp()$ and $\mathbf{b} = \mathbf{u}_0$. We will use the matrix-vector product routine described in section \ref{sec:fabintro} to compute this solution. We will compare it to the naive approach of computing $f(\mathbf{A})$ explicitely, then multiplying it by $\mathbf{u}_0$.
+\subsubsection{Results}
+
+We observe that once again, working on a much small Krylov subspace give machine-precision approximation (figure \ref{fig:ode_comp}). The optimal $k$ found was 27, which should allow for a big speed-up in solving this ODE. Indeed, the naive approach takes 13.54 seconds to compute the solution, whereas when working on this smaller Krylov subspace, for $k$ optimally chosen, it only took 225 milliseconds, this is almost a 60 times speed-up.
+
+\begin{figure}
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/ode_conv.tex}
+        \caption{}
+        \label{fig:ode_conv}
+    \end{subfigure}\hspace{.05\linewidth}
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/ode_sparse.tex}
+        \caption{}
+        \label{fig:ose_sparse}
+    \end{subfigure}
+    \caption{Convergence of our algorithm for computing $f(\mathbf{A})\mathbf{b}$ for solving the ODE (equation \ref{eq:odesolution}). We note that on our setup, $\mathbf{A}\in\mathbb{C}^{2500\times 2500}$. Machine precision is quickly reached, at only dimension 27 (a). The matrix $\mathbf{A}$ is strongly structured (b).}
+    \label{fig:ode_comp}
+\end{figure}
+
+Interestingly, we note that the choice of parameters in the ODE is having a big impact on the performance of the algorithm. If we vary the diffusivity $\epsilon$, we observe that the convergence is considerably slowed down (figure \ref{fig:ode_eps}). The algorithm remains quicker than the naive approach, though it seems important to bear in mind that minor perturbation to some of the problem's component (figures \ref{fig:ode_0.05} and \ref{fig:ode_0.1}) can lead to a considerable change in the convergence behavior.
+
+\begin{figure}
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/ode_0.05.tex}
+        \caption{$\epsilon = 0.05$}
+        \label{fig:ode_0.05}
+    \end{subfigure}\hspace{.05\linewidth}
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/ode_0.1.tex}
+        \caption{$\epsilon = 0.1$}
+        \label{fig:ode_0.1}
+    \end{subfigure}
+    \caption{Convergence of our algorithm for different diffusivity value $\epsilon$. We note that as the dissufivity increases, the need to work in higher dimension increases too, thus slowing down the convergence of our algorithm. }
+    \label{fig:ode_eps}
+\end{figure}
+
 \subsection{The sign function}
 In control theory we are often interested in the eigenvalues $\lambda$ of system matrices with $Re(\lambda)>0$, since they correspond to unstable poles. In the design of controllers it is therefore interesting to have an efficient way to count the number of eigenvalues of a matrix in the right half-plane $Re(z)>0$. Here we will build such a method.
 \begin{theorem}\label{thm:sign}
