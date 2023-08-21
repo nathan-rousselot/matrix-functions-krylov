@@ -63,9 +63,10 @@
 \maketitle
 
 \section{Introduction}
-In this document we introduce the notion of matrix functions. Say we have a function $f:\mathbb{C}\rightarrow\mathbb{C}$, then we can define the function $f$ on a matrix $\mathbf{A}$ as follows: $f:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$. In the following, we will first provide some theoretical background on matrix functions. Then, we will describe the numerical issues coming with manipulating matrix functions. Finally, we will provide algorithm for efficient computation of matrix fuctions.
+In this document we introduce the notion of matrix functions. Say we have a function $f:\mathbb{C}\rightarrow\mathbb{C}$, then we can define the function $f$ on a matrix $\mathbf{A}$ as follows: $f:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$. In the following, we will propose a formal definition for matrix functions. Then, we will present an elegant approach in evaluating any sufficiently differentiable function $f$ on a matrix $\mathbf{A}$. Then, we will put in persepective the computational issues that arise when computing matrix functions, and we will note that the matrix-vector product $f(\mathbf{A})\mathbf{b}$ can be approached in a more efficient way when working on a lower dimension Kyrlov subspace. Finally, some numerical experiments will be presented to illustrate the results.
 
 \section{Theoretical background}
+In this section, we will see how we can define a matrix function.
 \subsection{Natural Definition}
 \subsubsection*{Polynomial functions}
 Let $p:\mathbb{C}\rightarrow\mathbb{C}$ be a polynomial function of degree $d$:
@@ -184,7 +185,7 @@ where $\mathbf{J}$ is a Jordan matrix, and $\mathbf{V}$ is a matrix containing t
         0 & 0 & \cdots & 0 & \lambda
     \end{bmatrix}
 \end{equation}
-\begin{theorem}\label{thm:jordan}
+\begin{definition}\label{thm:jordan}
     Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ be a defective matrix. Then we can define the function $f(\mathbf{A})$ as:
     \begin{equation}
         f(\mathbf{A}) := \mathbf{V}f(\mathbf{J})\mathbf{V}^{-1}
@@ -207,7 +208,7 @@ where $\mathbf{J}$ is a Jordan matrix, and $\mathbf{V}$ is a matrix containing t
             0 & 0 & \cdots & 0 & f(\lambda_i)
         \end{bmatrix}
     \end{equation}
-\end{theorem}
+\end{definition}
 Obviously, both definitions of matrix functions, based on diagonalization and Jordan canonical form, presuppose that the spectral radius of $\mathbf{A}$, $\rho(\mathbf{A})$, is less than $r$, the radius of convergence.
 \subsection{Interpolation-based definition}
 Interestingly, in this section we will show that for any $\mathbf{A}\in\mathbb{C}^{n\times n}$ and any sufficiently differentiable $f$, we can find a polynomial $p$ such that $f(\mathbf{A})=p(\mathbf{A})$. First, let us observe from previous sections that only the eigenvalues of $\mathbf{A}$ are actually important for matrix polynomials. Also recall that every matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$ with spectrum $\{\lambda_1,\dots,\lambda_n\}$ has a minimal polynomial $\phi_{\mathbf{A}}$ given by
