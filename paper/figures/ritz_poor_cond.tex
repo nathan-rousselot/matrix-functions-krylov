@@ -1,0 +1,50 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=.9\linewidth,
+height=4cm,
+at={(0in,0in)},
+scale only axis,
+xmin=-0.1114,
+xmax=-0.11115,
+xlabel style={font=\color{white!15!black}},
+xlabel={Real},
+ymin=-0.5,
+ymax=0.5,
+ylabel style={font=\color{white!15!black}},
+ylabel={Imaginary},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=black, draw=none, mark=o, mark options={solid, black}]
+  table[row sep=crcr]{%
+-0.111390339495116	0\\
+-0.111389516591765	0\\
+-0.111388145095192	0\\
+-0.111386225018897	0\\
+-0.111383756381798	0\\
+-0.11138073920822	0\\
+};
+\addlegendentry{True eigenvalues}
+
+\addplot [color=black, draw=none, mark=x, mark options={solid, black}]
+  table[row sep=crcr]{%
+-0.111388247730224	0\\
+-0.111374081198001	0\\
+-0.111350623743485	0\\
+-0.111295975748161	0\\
+-0.111267844878066	0\\
+-0.111181160089968	0\\
+};
+\addlegendentry{Ritz Values}
+
+\end{axis}
+\end{tikzpicture}%

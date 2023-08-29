@@ -1,12 +1,12 @@
-function arnoldi_convergence(A,K)
+function A_est = arnoldi_convergence(A,K)
     err = zeros(K,1);
     n = length(A);
     u = randn(n,1);
     u = u/norm(u,2);
-    for k = 99:K
+    for k = 1:K
         [V,H] = arnoldi_iteration(A,u,k);
         A_est = V*H*V';
-        err(k) = norm(A_est-A,2)/norm(full(A),2);
+        err(k) = norm(eigs(A_est)-eigs(A),2)/norm(eigs(A),2);
         disp(k)
     end
     figure(1)

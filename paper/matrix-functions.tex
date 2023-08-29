@@ -13,7 +13,7 @@
 \documentclass[11pt]{article}
 \usepackage{float}
 \usepackage[ruled,vlined,linesnumbered,algo2e]{algorithm2e}
-\usepackage{algorithm}
+%\usepackage{algorithm}
 \usepackage{amsmath,amssymb}
 \usepackage{amsthm}
 \usepackage{makecell}
@@ -61,6 +61,7 @@
 %\setlength{\droptitle}{-5em}    
 %% %%%%%%%%%%%%%%%%%%%%%%%%%
 \maketitle
+%\tableofcontents
 
 \section{Introduction}
 In this document we introduce the notion of matrix functions. Say we have a function $f:\mathbb{C}\rightarrow\mathbb{C}$, then we can define the function $f$ on a matrix $\mathbf{A}$ as follows: $f:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$. In the following, we will propose a formal definition for matrix functions. Then, we will present an elegant approach in evaluating any sufficiently differentiable function $f$ on a matrix $\mathbf{A}$. Then, we will put in persepective the computational issues that arise when computing matrix functions, and we will note that the matrix-vector product $f(\mathbf{A})\mathbf{b}$ can be approached in a more efficient way when working on a lower dimension Kyrlov subspace. Finally, some numerical experiments will be presented to illustrate the results.
@@ -644,7 +645,8 @@ Interestingly, we note that the choice of parameters in the ODE is having a big 
     \label{fig:ode_eps}
 \end{figure}
 
-\subsection{The sign function}
+\subsection{The sign function}\label{sec:sign}
+\subsubsection{Background and theory}
 In control theory we are often interested in the eigenvalues $\lambda$ of system matrices with $Re(\lambda)>0$, since they correspond to unstable poles. In the design of controllers it is therefore interesting to have an efficient way to count the number of eigenvalues of a matrix in the right half-plane $Re(z)>0$. Here we will build such a method.
 \begin{theorem}\label{thm:sign}
 Let $\mathbf{A}\in\mathbb{C}^{n \times n}$ be a matrix with $k_{-}$ eigenvalues in the left plane, $k_{+}$ eigenvalues in the right plane and none on the imaginary axis, counting multiplicity. Let $\text{sgn}:\mathbb{C}\mapsto \{1,-1\}$ be defined by
@@ -685,5 +687,49 @@ Then $\text{trace}(\text{sgn}(\mathbf{A}))=k_{+}-k_{-}$.
         \text{trace}(\text{sgn}(\mathbf{A})) = \text{trace}(\text{sgn}(\mathbf{VJV}^{-1})) = \mathbf{V}\text{trace}(\text{sgn}(\mathbf{J}))\mathbf{V}^{-1} = (k_+-k_-)\mathbf{V}\mathbf{V}^{-1} = k_+ - k_-
     \end{equation*}
 \end{proof}
+\subsubsection{Stability of a system}
+In this section, we will see how theorem \ref{thm:sign} is a powerful tool for system stability assessment. Let us consider a system modeled by the matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, large and sparse. Say it has $p$ distinct eigenvalues $\lambda_i$, $i=1,\dots,p$. We know that if $\forall i, Re(\lambda_i)<0$, then the system is stable. Using the sign function, it immediately rewrites, if $\forall i, sign(Re(\lambda_i)) = -1$ then the system is stable. From theorem \ref{thm:sign}, we can design an algorithm that counts positive eigenvalues of a system. Obviously, when $n$ is extremely large, computing eigenvalues directly on $\mathbf{A}$ is not an option. Algorithm 3 takes advantage of the properties of Arnoldi method and estimates via Monte-Carlo sampling the number of positive eigenvalues of $\mathbf{A}$.
+
+\begin{algorithm2e}
+    \SetAlgoLined
+    \KwData{$A \in \mathbb{C}^{n \times n}$, $d \in \mathbb{N}$, $N \in \mathbb{N}$}
+    \KwResult{$k_+ \in \mathbb{R}$}
+    \caption{Computing $k_{+}(A)$}
+    $\mathbf{q} \gets \mathbf{0}\in\mathbb{R}^{N}$\;
+    \For{$i = 1$ \KwTo $N$}{
+      $\mathbf{u} \gets \text{randn}(n, 1)$\;
+      $\hat{\mathbf{u}} \gets \frac{\mathbf{u}}{\|\mathbf{u}\|}$\;
+      $[H, Q] \gets \text{arnoldi}(A, \hat{\mathbf{u}}, k)$\;
+      $q(i) \gets \text{trace}(\text{sign}(H)))$\;
+    }
+    $q := \text{mode}(\mathbf{q}) $\;
+    $q\gets (q+k)/2$
+\end{algorithm2e}
+\subsubsection{Application}
+In this section, we will see how theorem \ref{thm:sign} can be a powerful tool for system stability assessment. First let us consider a system modeled by the matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, large and sparse. Assume this matrix is poorly conditioned (a matrix is provided in the supplementary materials). Using Matlab's \texttt{eigs} function, we observe that the eigenvalues of $\mathbf{A}$ are clustered and very close to each other (figure \ref{fig:ritz_poor_cond}). This leads ultimately to very slow convergence of the eigenvalues using Arnolid method (figure \ref{fig:sign_difficult_est}). 
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/ritz_poor_cond.tex}
+        \caption{}
+        \label{fig:ritz_poor_cond}
+    \end{subfigure}\hspace{0.05\linewidth}
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/ritz_good_cond.tex}
+        \caption{}
+        \label{fig:ritz_good_cond}
+    \end{subfigure}
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/sign_difficult_est.tex}
+        \caption{}
+        \label{fig:sign_difficult_est}
+    \end{subfigure}\hspace{0.05\linewidth}
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/sign_easy_est.tex}
+        \caption{}
+        \label{fig:sign_easy_est}
+    \end{subfigure}
+    \caption{Comparison of the convergence of Arnoldi method to two different matrices. The first matrix (figures \ref{fig:ritz_poor_cond} and \ref{fig:sign_difficult_est}) is from section \ref{sec:sign}. We see from figure \ref{fig:ritz_poor_cond} that the eigenvalues are clustered and very close to each other, leading to poor convergences of the Ritz values. We see that even after 200 iterations, the method is far from having converged. On the other end of the spectrum, when applied to the matrix we have studied earlier in the matrix-vector product, which is better conditioned (figures \ref{fig:ritz_good_cond} and \ref{fig:sign_easy_est}), here, the eigenvalues are well spread, and the Ritz values converge quickly. We see that after 200 iterations, the Ritz values perfectly match the eigenvalues. Figures \ref{fig:sign_difficult_est} and \ref{fig:sign_easy_est} show the relative error in the estimation of the eigenvalues. And indeed we see that for the first matrix, the relative error is still very high after 200 iterations, whereas for the second matrix, the relative error is equal to machine precision from 150 iterations.}
+\end{figure}
 \printbibliography
 \end{document}
