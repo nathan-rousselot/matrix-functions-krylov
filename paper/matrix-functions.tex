@@ -61,10 +61,10 @@
 %\setlength{\droptitle}{-5em}    
 %% %%%%%%%%%%%%%%%%%%%%%%%%%
 \maketitle
-%\tableofcontents
+\tableofcontents
 
 \section{Introduction}
-In this document we introduce the notion of matrix functions. Say we have a function $f:\mathbb{C}\rightarrow\mathbb{C}$, then we can define the function $f$ on a matrix $\mathbf{A}$ as follows: $f:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$. In the following, we will propose a formal definition for matrix functions. Then, we will present an elegant approach in evaluating any sufficiently differentiable function $f$ on a matrix $\mathbf{A}$. Then, we will put in persepective the computational issues that arise when computing matrix functions, and we will note that the matrix-vector product $f(\mathbf{A})\mathbf{b}$ can be approached in a more efficient way when working on a lower dimension Kyrlov subspace. Finally, some numerical experiments will be presented to illustrate the results.
+In this document we introduce the notion of matrix functions. Say we have a function $f:\mathbb{C}\rightarrow\mathbb{C}$, then we can define the function $f$ on a matrix $\mathbf{A}$ as follows: $f:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$. In the following, we will propose a formal definition for matrix functions. Then, we will present an elegant approach in evaluating any sufficiently differentiable function $f$ on a matrix $\mathbf{A}$. Then, we will put in persepective the computational issues that arise when computing matrix functions, and we will note that the matrix-vector product $f(\mathbf{A})\mathbf{b}$ can be approached in a more efficient way when working on a lower dimension Krylov subspace. Finally, some numerical experiments will be presented to illustrate the results.
 
 \section{Theoretical background}
 In this section, we will see how we can define a matrix function.
@@ -705,8 +705,10 @@ In this section, we will see how theorem \ref{thm:sign} is a powerful tool for s
     $q := \text{mode}(\mathbf{q}) $\;
     $q\gets (q+k)/2$
 \end{algorithm2e}
-\subsubsection{Application}
-In this section, we will see how theorem \ref{thm:sign} can be a powerful tool for system stability assessment. First let us consider a system modeled by the matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, large and sparse. Assume this matrix is poorly conditioned (a matrix is provided in the supplementary materials). Using Matlab's \texttt{eigs} function, we observe that the eigenvalues of $\mathbf{A}$ are clustered and very close to each other (figure \ref{fig:ritz_poor_cond}). This leads ultimately to very slow convergence of the eigenvalues using Arnolid method (figure \ref{fig:sign_difficult_est}). 
+\subsubsection{Limitation of simple Arnoldi Method}
+In the previous algorithm to compute positive eigenvalues, we assume the function \texttt{arnoldi()} is the Matlab's translation of Algorithm 1, \textit{i.e} Modified Gram-Schmidt Arnoldi method. In this section we will see that the convergence of Arnoldi Method is actually not guaranteed in a reasonable time for all systems. The efficiency of the Arnoldi algorithm is highly correlated to the condition number of the matrix $\mathbf{A}$. We know from experience, that Ritz Value struggle to converge properly where eigenvalues of the matrix are very close to each other.
+
+Provided with this note, a matrix that has those properties. Using Matlab's \texttt{eigs} function, we observe that the eigenvalues of $\mathbf{A}$ are clustered and very close to each other (figure \ref{fig:ritz_poor_cond}). This leads ultimately to very slow convergence of the eigenvalues using Arnolid method (figure \ref{fig:sign_difficult_est}). 
 \begin{figure}
     \centering
     \begin{subfigure}[b]{.45\linewidth}
@@ -731,5 +733,9 @@ In this section, we will see how theorem \ref{thm:sign} can be a powerful tool f
     \end{subfigure}
     \caption{Comparison of the convergence of Arnoldi method to two different matrices. The first matrix (figures \ref{fig:ritz_poor_cond} and \ref{fig:sign_difficult_est}) is from section \ref{sec:sign}. We see from figure \ref{fig:ritz_poor_cond} that the eigenvalues are clustered and very close to each other, leading to poor convergences of the Ritz values. We see that even after 200 iterations, the method is far from having converged. On the other end of the spectrum, when applied to the matrix we have studied earlier in the matrix-vector product, which is better conditioned (figures \ref{fig:ritz_good_cond} and \ref{fig:sign_easy_est}), here, the eigenvalues are well spread, and the Ritz values converge quickly. We see that after 200 iterations, the Ritz values perfectly match the eigenvalues. Figures \ref{fig:sign_difficult_est} and \ref{fig:sign_easy_est} show the relative error in the estimation of the eigenvalues. And indeed we see that for the first matrix, the relative error is still very high after 200 iterations, whereas for the second matrix, the relative error is equal to machine precision from 150 iterations.}
 \end{figure}
+
+From this observation, we can easily say that with our previous implementation of Arnoldi, it seems unsafe to use Algorithm 3 as a tool to estimate the number of positive eigenvalues. We need to find a way to replace line 5 of Algorithm 3 by a more robust method.
+
+\subsubsection{Shifted-Invert Arnoldi Method}
 \printbibliography
 \end{document}

@@ -1,4 +1,4 @@
-\contentsline {section}{\numberline {1}Introduction}{1}{}%
+\contentsline {section}{\numberline {1}Introduction}{2}{}%
 \contentsline {section}{\numberline {2}Theoretical background}{2}{}%
 \contentsline {subsection}{\numberline {2.1}Natural Definition}{2}{}%
 \contentsline {subsection}{\numberline {2.2}Spectrum-Based Definition}{4}{}%
@@ -24,4 +24,5 @@
 \contentsline {subsection}{\numberline {5.2}The sign function}{16}{}%
 \contentsline {subsubsection}{\numberline {5.2.1}Background and theory}{16}{}%
 \contentsline {subsubsection}{\numberline {5.2.2}Stability of a system}{17}{}%
-\contentsline {subsubsection}{\numberline {5.2.3}Application}{18}{}%
+\contentsline {subsubsection}{\numberline {5.2.3}Limitation of simple Arnoldi Method}{18}{}%
+\contentsline {subsubsection}{\numberline {5.2.4}Shifted-Invert Arnoldi Method}{18}{}%
