@@ -732,10 +732,79 @@ Provided with this note, a matrix that has those properties. Using Matlab's \tex
         \label{fig:sign_easy_est}
     \end{subfigure}
     \caption{Comparison of the convergence of Arnoldi method to two different matrices. The first matrix (figures \ref{fig:ritz_poor_cond} and \ref{fig:sign_difficult_est}) is from section \ref{sec:sign}. We see from figure \ref{fig:ritz_poor_cond} that the eigenvalues are clustered and very close to each other, leading to poor convergences of the Ritz values. We see that even after 200 iterations, the method is far from having converged. On the other end of the spectrum, when applied to the matrix we have studied earlier in the matrix-vector product, which is better conditioned (figures \ref{fig:ritz_good_cond} and \ref{fig:sign_easy_est}), here, the eigenvalues are well spread, and the Ritz values converge quickly. We see that after 200 iterations, the Ritz values perfectly match the eigenvalues. Figures \ref{fig:sign_difficult_est} and \ref{fig:sign_easy_est} show the relative error in the estimation of the eigenvalues. And indeed we see that for the first matrix, the relative error is still very high after 200 iterations, whereas for the second matrix, the relative error is equal to machine precision from 150 iterations.}
+    \label{fig:fullritz}
 \end{figure}
 
 From this observation, we can easily say that with our previous implementation of Arnoldi, it seems unsafe to use Algorithm 3 as a tool to estimate the number of positive eigenvalues. We need to find a way to replace line 5 of Algorithm 3 by a more robust method.
 
 \subsubsection{Shifted-Invert Arnoldi Method}
+The Shifted-Invert Arnoldi method is a technique that allows for better convergence on ill-conditioned system, given we know some information on the spectrum of $\mathbf{A}$. The whole idea is to combine two ideas that are common to Power Iterations (\cite{saad2011numerical}), namely Shifted Power and Inverted iteration. The idea is fairly simple, instead of applying Arnoldi iterations on $\mathbf{A}$, you will apply it to $(\mathbf{A}-\sigma\mathbf{I})^{-1}$ where $\sigma$ is a shift.
+
+The interesting property about the shift is that it alters the eigenvalues but not the eigenvectors (\cite{saad2011numerical}). Once the eigenvalues $\mu$ of $(\mathbf{A}-\sigma\mathbf{I})^{-1}$ are computed, we can easily recover the eigenvalues of $\mathbf{A}$ by applying the shift $\sigma$ and inverting them
+\begin{equation*}
+    \lambda_i = \frac{1}{\mu_i} + \sigma
+\end{equation*}
+\begin{theorem}
+    Say you chose an arbitrary $\sigma$, then given $\lambda_i$ and $\lambda_j$ two eigenvalues of $\mathbf{A}$ such that $\forall k \neq i,j$, $\|\sigma-\lambda_k\| > \|\sigma-\lambda_i,j\|$, then the convergence factor of Shifted-Invert method is given by 
+    \begin{equation}
+        \rho_{\mathbf{I}} = \frac{|\sigma-\lambda_i|}{|\sigma-\lambda_j|}
+    \end{equation}
+\end{theorem}
+Consequently, we see that a good initialization of $\sigma$ is crucial to the convergence of the method. On the other end, a poor choice could have bad effects on the convergence, ultimately not converging at all. Several choices are open to us as for initilization of $\sigma$. One could stick with the unity, proceed to some power iterations, using the trace, or even use the Ritz values as computed in figure \ref{fig:ritz_poor_cond}. Inspired by the convergence rate of Power Iteration that is driven by the ratio of the two largest egeinvalues (in terms of magnitude), I suggest the following $\sigma$ as a good estimator:
+\begin{equation}
+    \sigma = \mathbb{E}\left[\frac{\lambda_1+\lambda_2}{2}\right]
+\end{equation}
+where $\lambda_1$ and $\lambda_2$ are the two largest eigenvalues of $\mathbf{A}$ in terms of magnitude. Computationally speaking, the Shifted-Invert procedure looks very heavy, especially considering the inverse operator : inverting such a large matrix is very costly. The good news is that we can take the LU factorization of $(\mathbf{A}-\sigma\mathbf{I})$, and the solve two linear system to compute the inverse. This is much more efficient than inverting the matrix directly. The Shifted-Invert Arnoldi method is described in Algorithm 4.
+\begin{algorithm2e}
+    \SetAlgoLined
+    \KwData{$A \in \mathbb{C}^{n \times n}$, $v_1 \in \mathbb{C}^n$ a unit vector in the chosen norm, $\sigma\in\mathbb{C}$}
+    \KwResult{$H_n \in \mathbb{C}^{n\times n}$}
+    \caption{Shifted-Invert Arnoldi Iteration}
+    $[L,U] \gets \text{lu}(A-\sigma I)$\;
+    \For{$k = 1 \KwTo n$}{
+        $\mathbf{w} \gets U^{-1}L^{-1}\mathbf{v}_k$\;
+        \For{$i = 1 \KwTo k$}{
+            $h_{ik} \gets \mathbf{v}_i^*\mathbf{w}$\;
+            $\mathbf{w} \gets \mathbf{w} - h_{ik}\mathbf{v}_i$\;
+        }
+        $h_{k+1,k} \gets \|\mathbf{w}\|$\;
+        \If{$h_{k+1,k} = 0$}{
+            \textbf{break}\;
+        }
+        $\mathbf{v_{k+1}} \gets \mathbf{w}/h_{k+1,k}$
+    }
+    %\label{alg:arnoldi}
+    %\label{alg:arnoldi}
+\end{algorithm2e}
+Note that in algorithm 4, $\sigma$ is not recomputed throughout the iterations. One way to potentially fasten the convergence, or to avoid having to define a good $\sigma$ initially (which can be costly) is to recompute $\sigma$ at each iteration (or at each $i$ iteration). A drawback obviously is that it requires to recompute the LU factorization, which is arguabely the most costly operation in Algorithm 4. We will not investigate this further in this report, but it is worth noting that this could be a potential improvement to the algorithm.
+
+If we take a look at the convergence of the Ritz Values, similarly as in figure \ref{fig:fullritz}, we note that with this method, Ritz values converges no matter the matrix (figure \ref{fig:shiftritz_full}), and in much fewer iterations. We note that the final relative error is slightly higher than the machine precision $\epsilon$, and thus is slightly higher than in the regular Arnoldi Method, maybe because there is a numerical bias introduced by the shift and inverse steps. However, the relative error remains very small, around $10^{-14}$.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/ritz_shift_bad.tex}
+        \caption{}
+        \label{fig:ritz_shift_bad}
+    \end{subfigure}\hspace{0.05\linewidth}
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/ritz_shift_good.tex}
+        \caption{}
+        \label{fig:ritz_shift_good}
+    \end{subfigure}
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/sign_shift_bad.tex}
+        \caption{}
+        \label{fig:sign_shift_bad}
+    \end{subfigure}\hspace{0.05\linewidth}
+    \begin{subfigure}[b]{.45\linewidth}
+        \input{figures/sign_shift_good.tex}
+        \caption{}
+        \label{fig:sign_shift_good}
+    \end{subfigure}
+    \caption{Same experiments as in figure \ref{fig:fullritz} using a static $\sigma=\mathbb{E}[(\lambda_1+\lambda_2)/2]$. We see that the convergence is much better than in the previous case, and that the Ritz values converge much faster in both matrices. The well-conditioned matrix (figures \ref{fig:ritz_shift_good} and \ref{fig:sign_shift_good}) also converges, but un much fewer iterations. Finally, wee see that even the very ill-conditioned matrix (figures \ref{fig:ritz_shift_bad} and \ref{fig:sign_shift_bad}) converges in only 20 iterations.}
+    \label{fig:shiftritz_full}
+\end{figure}
+\subsubsection{Counting unstable eigenvalues}
 \printbibliography
 \end{document}
