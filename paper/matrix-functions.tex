@@ -18,6 +18,9 @@
 \usepackage{amsthm}
 \usepackage{makecell}
 \usepackage{tikz}
+\usepackage{titling}
+\renewcommand\maketitlehooka{\null\mbox{}\vfill}
+\renewcommand\maketitlehookd{\vfill\null}
 \usepackage[a4paper, total={6.5in, 9in}]{geometry}
 \usepackage[style=authoryear, backend=biber]{biblatex}
 \bibliography{bibliography.bib}
@@ -61,8 +64,9 @@
 \begin{document}
 %\setlength{\droptitle}{-5em}    
 %% %%%%%%%%%%%%%%%%%%%%%%%%%
-\maketitle
-\newpage
+\begin{titlingpage}
+    \maketitle
+\end{titlingpage}
 \tableofcontents
 \newpage
 
