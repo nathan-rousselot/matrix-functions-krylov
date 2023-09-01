@@ -1,36 +1,36 @@
-\contentsline {section}{\numberline {1}Introduction}{2}{}%
-\contentsline {section}{\numberline {2}Theoretical background}{2}{}%
-\contentsline {subsection}{\numberline {2.1}Natural Definition}{2}{}%
-\contentsline {subsection}{\numberline {2.2}Spectrum-Based Definition}{4}{}%
-\contentsline {subsection}{\numberline {2.3}Interpolation-based definition}{5}{}%
-\contentsline {section}{\numberline {3}The matrix-vector product $f(\mathbf {A})\mathbf {b}$}{7}{}%
-\contentsline {subsection}{\numberline {3.1}Introduction}{7}{}%
-\contentsline {subsubsection}{\numberline {3.1.1}Motivation}{7}{}%
-\contentsline {subsubsection}{\numberline {3.1.2}Applications}{7}{}%
-\contentsline {paragraph}{\numberline {3.1.2.1}Power Iteration}{8}{}%
-\contentsline {paragraph}{\numberline {3.1.2.2}Conjugate Gradient Method}{8}{}%
-\contentsline {paragraph}{\numberline {3.1.2.3}Lanczos Algorithm for Tridiagonalization}{8}{}%
-\contentsline {paragraph}{\numberline {3.1.2.4}Krylov Subspace Methods in Solving Linear Systems and Eigenvalue Problems}{8}{}%
-\contentsline {subsection}{\numberline {3.2}Computationally Efficient Evaluation of $f(\mathbf {A})\mathbf {b}$}{8}{}%
-\contentsline {subsubsection}{\numberline {3.2.1}Formal Definitions}{8}{}%
-\contentsline {subsubsection}{\numberline {3.2.2}The Arnoldi Method}{9}{}%
-\contentsline {subsubsection}{\numberline {3.2.3}The matrix-vector product $f(\mathbf {A})\mathbf {b}$}{10}{}%
-\contentsline {section}{\numberline {4}Algorithms}{11}{}%
-\contentsline {subsection}{\numberline {4.1}Dense case}{12}{}%
-\contentsline {subsubsection}{\numberline {4.1.1}Dependencies}{12}{}%
-\contentsline {subsubsection}{\numberline {4.1.2}Implementation}{12}{}%
-\contentsline {subsubsection}{\numberline {4.1.3}Results}{13}{}%
-\contentsline {subsection}{\numberline {4.2}Matrix-vector product}{14}{}%
-\contentsline {subsubsection}{\numberline {4.2.1}Implementation}{14}{}%
-\contentsline {subsubsection}{\numberline {4.2.2}Results}{14}{}%
-\contentsline {section}{\numberline {5}Applications}{15}{}%
-\contentsline {subsection}{\numberline {5.1}Matrix Exponential}{16}{}%
-\contentsline {subsubsection}{\numberline {5.1.1}Context}{16}{}%
-\contentsline {subsubsection}{\numberline {5.1.2}Results}{17}{}%
-\contentsline {subsection}{\numberline {5.2}The sign function}{17}{}%
-\contentsline {subsubsection}{\numberline {5.2.1}Background and theory}{17}{}%
-\contentsline {subsubsection}{\numberline {5.2.2}Stability of a system}{19}{}%
-\contentsline {subsubsection}{\numberline {5.2.3}Limitation of simple Arnoldi Method}{19}{}%
-\contentsline {subsubsection}{\numberline {5.2.4}Shifted-Invert Arnoldi Method}{21}{}%
-\contentsline {subsubsection}{\numberline {5.2.5}Counting positive eigenvalues}{22}{}%
-\contentsline {section}{\numberline {6}Conclusion}{25}{}%
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {section}{\numberline {2}Theoretical background}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Natural Definition}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Spectrum-Based Definition}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Interpolation-based definition}{5}{subsection.2.3}%
+\contentsline {section}{\numberline {3}The matrix-vector product $f(\mathbf {A})\mathbf {b}$}{7}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Introduction}{7}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Motivation}{7}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Applications}{7}{subsubsection.3.1.2}%
+\contentsline {paragraph}{\numberline {3.1.2.1}Power Iteration}{8}{paragraph.3.1.2.1}%
+\contentsline {paragraph}{\numberline {3.1.2.2}Conjugate Gradient Method}{8}{paragraph.3.1.2.2}%
+\contentsline {paragraph}{\numberline {3.1.2.3}Lanczos Algorithm for Tridiagonalization}{8}{paragraph.3.1.2.3}%
+\contentsline {paragraph}{\numberline {3.1.2.4}Krylov Subspace Methods in Solving Linear Systems and Eigenvalue Problems}{8}{paragraph.3.1.2.4}%
+\contentsline {subsection}{\numberline {3.2}Computationally Efficient Evaluation of $f(\mathbf {A})\mathbf {b}$}{8}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Formal Definitions}{8}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}The Arnoldi Method}{9}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}The matrix-vector product $f(\mathbf {A})\mathbf {b}$}{10}{subsubsection.3.2.3}%
+\contentsline {section}{\numberline {4}Algorithms}{11}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Dense case}{12}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Dependencies}{12}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}Implementation}{12}{subsubsection.4.1.2}%
+\contentsline {subsubsection}{\numberline {4.1.3}Results}{13}{subsubsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.2}Matrix-vector product}{14}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Implementation}{14}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Results}{14}{subsubsection.4.2.2}%
+\contentsline {section}{\numberline {5}Applications}{15}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Matrix Exponential}{16}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Context}{16}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Results}{17}{subsubsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.2}The sign function}{17}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Background and theory}{17}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Stability of a system}{19}{subsubsection.5.2.2}%
+\contentsline {subsubsection}{\numberline {5.2.3}Limitation of simple Arnoldi Method}{19}{subsubsection.5.2.3}%
+\contentsline {subsubsection}{\numberline {5.2.4}Shifted-Invert Arnoldi Method}{21}{subsubsection.5.2.4}%
+\contentsline {subsubsection}{\numberline {5.2.5}Counting positive eigenvalues}{22}{subsubsection.5.2.5}%
+\contentsline {section}{\numberline {6}Conclusion}{25}{section.6}%

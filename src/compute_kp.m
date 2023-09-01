@@ -5,9 +5,7 @@ function kp = compute_kp(A,k,N,lb,ub)
         u = randn(n,1);
         sigma = lb+(ub-lb)*rand(1,1);
         u = u/norm(u,2);
-        [~,H] = arnoldi_iteration(A,u,k);
-
-        % [~,H,~] = shifted_arnoldi_iteration(A,u,k,sigma);
+        [~,H,~] = shifted_arnoldi_iteration(A,u,k,sigma);
         q(i) = trace(sign(H));
     end
     kp = mode(q);

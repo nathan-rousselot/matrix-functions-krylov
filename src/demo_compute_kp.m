@@ -19,7 +19,7 @@ function demo_compute_kp(A,N,k)
     figure;
     plot(kp,'k')
     hold on
-    plot([1 N], [4 4],'k--')
+    plot([1 N], [kp_exact kp_exact],'k--')
     xlabel('Number of Sampling')
     ylabel('Number of Positive Eigenvalues')
     legend('Estimation','True Value')
