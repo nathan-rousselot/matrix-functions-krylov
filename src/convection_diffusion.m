@@ -1,5 +1,5 @@
 clear;
-close;
+close all;
 clc;
 n=50;
 x=linspace(0,1,n);
@@ -55,6 +55,7 @@ U = reshape(u(:,i+1),[n,n]);
 contourf(U,10)
 axis equal
 end
+colormap gray
 
 figure(2)
 clf
@@ -64,9 +65,11 @@ U = reshape(u_exact(:,i+1),[n,n]);
 contourf(U,10)
 axis equal
 end
+colormap gray
 
 figure(3)
 semilogy(err,'k','LineWidth',0.9)
 xlabel('Dimension of the Krylov space')
 ylabel('Relative error')
 grid on
+

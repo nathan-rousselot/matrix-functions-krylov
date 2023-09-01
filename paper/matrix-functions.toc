@@ -23,7 +23,7 @@
 \contentsline {subsubsection}{\numberline {5.1.2}Results}{16}{}%
 \contentsline {subsection}{\numberline {5.2}The sign function}{16}{}%
 \contentsline {subsubsection}{\numberline {5.2.1}Background and theory}{16}{}%
-\contentsline {subsubsection}{\numberline {5.2.2}Stability of a system}{17}{}%
+\contentsline {subsubsection}{\numberline {5.2.2}Stability of a system}{18}{}%
 \contentsline {subsubsection}{\numberline {5.2.3}Limitation of simple Arnoldi Method}{18}{}%
-\contentsline {subsubsection}{\numberline {5.2.4}Shifted-Invert Arnoldi Method}{18}{}%
-\contentsline {subsubsection}{\numberline {5.2.5}Counting positive eigenvalues}{22}{}%
+\contentsline {subsubsection}{\numberline {5.2.4}Shifted-Invert Arnoldi Method}{20}{}%
+\contentsline {subsubsection}{\numberline {5.2.5}Counting positive eigenvalues}{21}{}%

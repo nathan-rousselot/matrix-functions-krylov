@@ -628,7 +628,7 @@ We observe that once again, working on a much small Krylov subspace give machine
     \label{fig:ode_comp}
 \end{figure}
 
-Interestingly, we note that the choice of parameters in the ODE is having a big impact on the performance of the algorithm. If we vary the diffusivity $\epsilon$, we observe that the convergence is considerably slowed down (figure \ref{fig:ode_eps}). The algorithm remains quicker than the naive approach, though it seems important to bear in mind that minor perturbation to some of the problem's component (figures \ref{fig:ode_0.05} and \ref{fig:ode_0.1}) can lead to a considerable change in the convergence behavior.
+Interestingly, we note that the choice of parameters in the ODE is having a big impact on the performance of the algorithm. If we vary the diffusivity $\epsilon$, we observe that the convergence is considerably slowed down (figure \ref{fig:ode_eps}). The algorithm remains quicker than the naive approach, though it seems important to bear in mind that minor perturbation to some of the problem's component (figures \ref{fig:ode_0.05} and \ref{fig:ode_0.1}) can lead to a considerable change in the convergence behavior. This kind of behavior is usually the definition of a non robust method. More advanced techniques to solve ODEs exist, such as upwind scheme (\cite{lewis2004fundamentals}), or more generally higher order finite-difference schemes and Strong Stability Runge-Kuttas. we will not discuss them here, but it is important to keep in mind that this method is not robust to perturbations in the problem's parameters.
 
 \begin{figure}
     \begin{subfigure}[b]{.45\linewidth}
@@ -641,8 +641,14 @@ Interestingly, we note that the choice of parameters in the ODE is having a big 
         \caption{$\epsilon = 0.1$}
         \label{fig:ode_0.1}
     \end{subfigure}
-    \caption{Convergence of our algorithm for different diffusivity value $\epsilon$. We note that as the dissufivity increases, the need to work in higher dimension increases too, thus slowing down the convergence of our algorithm. }
+    \caption{Convergence of our algorithm for different diffusivity value $\epsilon$. We note that as the dissufivity increases, the need to work in higher dimension increases too, thus slowing down the convergence of our algorithm. This suggests that diffusivity impacts the conditioning of $\mathbf{A}$.}
     \label{fig:ode_eps}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.7\linewidth]{figures/convection_krylov.pdf}
+    \caption{Result of solving the convection-diffusion equation with our method. For the sake of conciseness, we are not showing results from the exact solution as they are humanly undistinguishable.}
 \end{figure}
 
 \subsection{The sign function}\label{sec:sign}
