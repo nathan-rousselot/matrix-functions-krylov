@@ -1,29 +1,36 @@
-\contentsline {section}{\numberline {1}Introduction}{2}{}%
-\contentsline {section}{\numberline {2}Theoretical background}{2}{}%
-\contentsline {subsection}{\numberline {2.1}Natural Definition}{2}{}%
-\contentsline {subsection}{\numberline {2.2}Spectrum-Based Definition}{4}{}%
-\contentsline {subsection}{\numberline {2.3}Interpolation-based definition}{5}{}%
-\contentsline {section}{\numberline {3}The matrix-vector product $f(\mathbf {A})\mathbf {b}$}{7}{}%
-\contentsline {subsection}{\numberline {3.1}Introduction}{7}{}%
-\contentsline {subsection}{\numberline {3.2}The Method}{7}{}%
-\contentsline {subsubsection}{\numberline {3.2.1}Formal Definitions}{7}{}%
-\contentsline {subsubsection}{\numberline {3.2.2}The Arnoldi Method}{8}{}%
-\contentsline {subsubsection}{\numberline {3.2.3}The matrix-vector product $f(\mathbf {A})\mathbf {b}$}{9}{}%
-\contentsline {section}{\numberline {4}Algorithms}{10}{}%
-\contentsline {subsection}{\numberline {4.1}Dense case}{10}{}%
-\contentsline {subsubsection}{\numberline {4.1.1}Dependencies}{11}{}%
-\contentsline {subsubsection}{\numberline {4.1.2}Implementation}{11}{}%
-\contentsline {subsubsection}{\numberline {4.1.3}Results}{12}{}%
-\contentsline {subsection}{\numberline {4.2}Matrix-vector product}{13}{}%
-\contentsline {subsubsection}{\numberline {4.2.1}Implementation}{13}{}%
-\contentsline {subsubsection}{\numberline {4.2.2}Results}{13}{}%
-\contentsline {section}{\numberline {5}Applications}{14}{}%
-\contentsline {subsection}{\numberline {5.1}Matrix Exponential}{15}{}%
-\contentsline {subsubsection}{\numberline {5.1.1}Context}{15}{}%
-\contentsline {subsubsection}{\numberline {5.1.2}Results}{16}{}%
-\contentsline {subsection}{\numberline {5.2}The sign function}{16}{}%
-\contentsline {subsubsection}{\numberline {5.2.1}Background and theory}{16}{}%
-\contentsline {subsubsection}{\numberline {5.2.2}Stability of a system}{18}{}%
-\contentsline {subsubsection}{\numberline {5.2.3}Limitation of simple Arnoldi Method}{18}{}%
-\contentsline {subsubsection}{\numberline {5.2.4}Shifted-Invert Arnoldi Method}{20}{}%
-\contentsline {subsubsection}{\numberline {5.2.5}Counting positive eigenvalues}{21}{}%
+\contentsline {section}{\numberline {1}Introduction}{3}{}%
+\contentsline {section}{\numberline {2}Theoretical background}{3}{}%
+\contentsline {subsection}{\numberline {2.1}Natural Definition}{3}{}%
+\contentsline {subsection}{\numberline {2.2}Spectrum-Based Definition}{5}{}%
+\contentsline {subsection}{\numberline {2.3}Interpolation-based definition}{6}{}%
+\contentsline {section}{\numberline {3}The matrix-vector product $f(\mathbf {A})\mathbf {b}$}{8}{}%
+\contentsline {subsection}{\numberline {3.1}Introduction}{8}{}%
+\contentsline {subsubsection}{\numberline {3.1.1}Motivation}{8}{}%
+\contentsline {subsubsection}{\numberline {3.1.2}Applications}{8}{}%
+\contentsline {paragraph}{\numberline {3.1.2.1}Power Iteration}{9}{}%
+\contentsline {paragraph}{\numberline {3.1.2.2}Conjugate Gradient Method}{9}{}%
+\contentsline {paragraph}{\numberline {3.1.2.3}Lanczos Algorithm for Tridiagonalization}{9}{}%
+\contentsline {paragraph}{\numberline {3.1.2.4}Krylov Subspace Methods in Solving Linear Systems and Eigenvalue Problems}{9}{}%
+\contentsline {subsection}{\numberline {3.2}Computationally Efficient Evaluation of $f(\mathbf {A})\mathbf {b}$}{9}{}%
+\contentsline {subsubsection}{\numberline {3.2.1}Formal Definitions}{9}{}%
+\contentsline {subsubsection}{\numberline {3.2.2}The Arnoldi Method}{10}{}%
+\contentsline {subsubsection}{\numberline {3.2.3}The matrix-vector product $f(\mathbf {A})\mathbf {b}$}{11}{}%
+\contentsline {section}{\numberline {4}Algorithms}{12}{}%
+\contentsline {subsection}{\numberline {4.1}Dense case}{13}{}%
+\contentsline {subsubsection}{\numberline {4.1.1}Dependencies}{13}{}%
+\contentsline {subsubsection}{\numberline {4.1.2}Implementation}{13}{}%
+\contentsline {subsubsection}{\numberline {4.1.3}Results}{14}{}%
+\contentsline {subsection}{\numberline {4.2}Matrix-vector product}{15}{}%
+\contentsline {subsubsection}{\numberline {4.2.1}Implementation}{15}{}%
+\contentsline {subsubsection}{\numberline {4.2.2}Results}{15}{}%
+\contentsline {section}{\numberline {5}Applications}{16}{}%
+\contentsline {subsection}{\numberline {5.1}Matrix Exponential}{17}{}%
+\contentsline {subsubsection}{\numberline {5.1.1}Context}{17}{}%
+\contentsline {subsubsection}{\numberline {5.1.2}Results}{18}{}%
+\contentsline {subsection}{\numberline {5.2}The sign function}{18}{}%
+\contentsline {subsubsection}{\numberline {5.2.1}Background and theory}{18}{}%
+\contentsline {subsubsection}{\numberline {5.2.2}Stability of a system}{20}{}%
+\contentsline {subsubsection}{\numberline {5.2.3}Limitation of simple Arnoldi Method}{20}{}%
+\contentsline {subsubsection}{\numberline {5.2.4}Shifted-Invert Arnoldi Method}{22}{}%
+\contentsline {subsubsection}{\numberline {5.2.5}Counting positive eigenvalues}{23}{}%
+\contentsline {section}{\numberline {6}Conclusion}{26}{}%

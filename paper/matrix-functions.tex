@@ -26,10 +26,11 @@
 \setlength\parindent{0pt} %% Do not touch this
 \DeclareMathOperator{\phiAb}{\phi_{\mathbf{A},\mathbf{b}}}
 \DeclareMathOperator{\spn}{span}
-\newtheorem{lemma}{Lemma}
-\newtheorem{theorem}{Theorem}
-\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}[section]
 \newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{example}{Example}[section]
 
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest}
@@ -40,7 +41,7 @@
 \usepackage{grffile}
 \usepackage{amsmath}
 \usepackage{subcaption}
-
+\setcounter{secnumdepth}{4}
 \usepgfplotslibrary{external} 
 \tikzexternalize
 
@@ -61,10 +62,21 @@
 %\setlength{\droptitle}{-5em}    
 %% %%%%%%%%%%%%%%%%%%%%%%%%%
 \maketitle
+\newpage
 \tableofcontents
+\newpage
 
 \section{Introduction}
-In this document we introduce the notion of matrix functions. Say we have a function $f:\mathbb{C}\rightarrow\mathbb{C}$, then we can define the function $f$ on a matrix $\mathbf{A}$ as follows: $f:\mathbb{C}^{n\times n}\rightarrow\mathbb{C}^{n\times n}$. In the following, we will propose a formal definition for matrix functions. Then, we will present an elegant approach in evaluating any sufficiently differentiable function $f$ on a matrix $\mathbf{A}$. Then, we will put in persepective the computational issues that arise when computing matrix functions, and we will note that the matrix-vector product $f(\mathbf{A})\mathbf{b}$ can be approached in a more efficient way when working on a lower dimension Krylov subspace. Finally, some numerical experiments will be presented to illustrate the results.
+The study of matrix functions is an important concept in numerical linear algebra with critical applications spanning multiple disciplines, from physical simulations by solving ODEs and PDEs (\cite{higham2008functions}) to control theory, and passing by more advanced algebra concepts such that Volterra Kernels where matrix exponential plays a key role (\cite{burt2017efficient}). Given a scalar function \( f: \mathbb{C} \rightarrow \mathbb{C} \), extending this function to act on matrices, \( f: \mathbb{C}^{n \times n} \rightarrow \mathbb{C}^{n \times n} \), is far from trivial. The extension raises fundamental mathematical and computational challenges, as matrices do not generally commute under multiplication and their spectral properties can vary widely. 
+
+In this document, we first establish a formal mathematical foundation for matrix functions, rigorously defining how a function \( f \) can act upon a square matrix \( \mathbf{A} \). Second, we explore an elegant mathematical framework for evaluating any sufficiently differentiable function \( f \) on a matrix \( \mathbf{A} \). This approach leverages the spectral decomposition of \( \mathbf{A} \) and extends to more complex scenarios involving defective matrices.
+
+Third, we delve into computational issues that manifest in the direct computation of matrix functions. A pivotal focus will be given to the role of Krylov subspaces (\cite{liesen2013krylov}) in mitigating these issues. It will be shown that the matrix-vector product \( f(\mathbf{A})\mathbf{b} \) can often be approximated more efficiently within a low-dimensional Krylov subspace, thus alleviating computational burdens without compromising accuracy significantly.
+
+Finally, we present a series of numerical experiments to substantiate the theoretical assertions. These experiments are designed to validate the efficacy and limitations of different methods for computing matrix functions, particularly when exploiting Krylov subspaces for computational efficiency.
+
+Our approach provides not only a comprehensive understanding of matrix functions but also offers practical computational strategies crucial for large-scale problems in science and engineering.
+
 
 \section{Theoretical background}
 In this section, we will see how we can define a matrix function.
@@ -263,6 +275,7 @@ From this corollary, and from theorem \ref{thm:unicity}, we can confirm our earl
 %%%%%%% NEED TO COMMENT ON THIS %%%%%%%%
 \section{The matrix-vector product $f(\mathbf{A})\mathbf{b}$}
 \subsection{Introduction}\label{sec:fabintro}
+\subsubsection{Motivation}
 To motivate the need for a matrix-vector product, we will consider a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$. Let us consider the matrix exponential, such as :
 \begin{equation}
     e^{\mathbf{A}} = \sum_{k=0}^\infty \frac{\mathbf{A}^k}{k!}
@@ -280,7 +293,28 @@ Not only does this computation is very heavy (see section \ref{sec:matrixexp} fo
 \end{equation*}
 Obviously, $\mathbf{A}$ is a sparse matrix, and also a rank-structured one : it is a tridiagonal matrix. However, by computing $e^{\mathbf{A}}$, one will get a dense matrix. Storing a dense matrix often becomes challenging as the dimension of the problem grows. Besides storing, computing such a dense matrix is also an issue. However, the matrix-vector product $f(\mathbf{A})\mathbf{b}$ can be stored and computed efficiently.
 
-\subsection{The Method}
+\subsubsection{Applications}
+In numerical linear algebra, numerous methods rely hugely on the matrix-vector product $f(\mathbf{A})\mathbf{b}$.
+\paragraph{Power Iteration}
+The Power Iteration method is employed to approximate the largest eigenvalue (in absolute value) and its corresponding eigenvector of a given square matrix $\mathbf{A}$. The key operation is a matrix-vector product $\mathbf{A}\mathbf{x}$, iteratively applied. Each iteration takes the form
+\begin{equation}
+    \mathbf{x}^{(k+1)} = \frac{\mathbf{A}\mathbf{x}^{(k)}}{\|\mathbf{A}\mathbf{x}^{(k)}\|_2}
+\end{equation}
+The method converges under certain conditions, and its rate of convergence is determined by the ratio of the two largest eigenvalues. In this case, the computational cost is dominated by the matrix-vector product.
+\paragraph{Conjugate Gradient Method}
+
+The Conjugate Gradient (CG) method is used for solving linear systems $\mathbf{A}\mathbf{x} = \mathbf{b}$ where $\mathbf{A}$ is positive definite. Each iteration involves a matrix-vector product $\mathbf{A}\mathbf{p}_k$, along with vector additions and scalar multiplications, but not full matrix operations. This allows CG to be used efficiently even when $\mathbf{A}$ is very large but sparse, as it often occurs in discretized optimization problems and PDE-constrained optimization.
+\paragraph{Lanczos Algorithm for Tridiagonalization}
+
+The Lanczos algorithm constructs a tridiagonal matrix that is orthogonally similar to the original matrix $\mathbf{A}$. This tridiagonal matrix is often used in eigenvalue problems or singular value decomposition (SVD). Again, the dominant operation here is the matrix-vector product $\mathbf{A}\mathbf{v}_i$ in each iteration.
+
+\paragraph{Krylov Subspace Methods in Solving Linear Systems and Eigenvalue Problems}
+
+More generarly, methods like GMRES, BICGStab, or MINRES operate in a Krylov subspace spanned by ${\mathbf{b}, \mathbf{A}\mathbf{b}, \mathbf{A}^2\mathbf{b}, \ldots}$ for solving linear systems or eigenvalue problems. These methods are particularly efficient when $\mathbf{A}$ is large and sparse, as they also primarily require matrix-vector multiplications.
+
+The key point behind each of these examples is that if matrix-vector products can be computationally cheaper than full matrix-matrix operations, then it could permit sparse, structured, or iterative methods scaling well with problem size.
+
+\subsection{Computationally Efficient Evaluation of $f(\mathbf{A})\mathbf{b}$}
 As motivated by \ref{sec:fabintro}, when encountering specific structure in $\mathbf{A}$, such as sparsity, there is a lot to gain if we can store $f(\mathbf{A})\mathbf{b}$. In this section we will work towards a way to evaluate $f(\mathbf{A})\mathbf{b}$ in an intuitive way, thanks to Arnoldi method.
 
 \subsubsection{Formal Definitions}
@@ -459,7 +493,7 @@ We are provided with a function \texttt{hess\_and\_phi()} that computed the Hess
     \item It computes the minimal polynomial of $\mathbf{A}$, $\phi_{\mathbf{A}}$ through its Jordan Canonical Form
     \item It returns $\mathbf{V}$, $\mathbf{H}$, $\mathbf{J}$, $\lambda_j$ (the eigenvalues of $\mathbf{A}$) and $n_i$ (the multiplicity of $\lambda_i$ in $\phi_{\mathbf{A}}$) 
 \end{enumerate}
-Note that step 2 makes perfect sense.
+Note that step 2 makes perfect sense, using the following theorem:
 \begin{theorem}
     Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ with a Hessenberg reduction defined by $\mathbf{V}^*\mathbf{A}\mathbf{V} = \mathbf{H}$. Then $\mathbf{A}$ and $\mathbf{H}$ share the same Jordan Canonical Form.
 \end{theorem}
@@ -856,5 +890,16 @@ In figure \ref{fig:kp}, we show the comparison between Algorithm 3 and 5. For th
 \end{figure}
 
 We conclude that, assuming a good knowledge of the spectral properties of $\mathbf{A}$ (here, the bounds of its spectrum) enables for faster and more precise computations. In this case, it allows for quick assessment of a system's stability, which is a very important property in control theory.
+
+\section{Conclusion}
+
+This document has presented a comprehensive investigation into the theory, computation, and application of matrix functions. We started with a rigorous definition, exploring three distinct approaches: the natural definition, the spectrum-based definition, and the interpolation-based definition. This theoretical background was critical for extending the study into more complex computational realms (\cite{higham2008functions}).
+
+The role of the matrix-vector product \(f(\mathbf{A})\mathbf{b}\) was subsequently analyzed, especially emphasizing its computational aspects. We delved into its importance across a wide range of numerical methods like Power Iteration, Conjugate Gradient Method, Lanczos Algorithm, and more (\cite{golub2013matrix}). A dedicated discussion on the computationally efficient evaluation of \(f(\mathbf{A})\mathbf{b}\) brought in concepts like the (Modified-Gram-Schmidt) Arnoldi Method, accentuating the role of Krylov subspaces (\cite{liesen2013krylov}).
+
+Following this, we took an algorithmic stance, presenting the intricacies involved in implementing the computation of matrix functions in the dense case as well as when computing the matrix-vector product. Efficacy and efficiency were weighed through empirical results, providing a deeper understanding of algorithmic choices.
+
+Finally, we discussed real-world applications, particularly focusing on matrix exponentials and sign functions. The document broadened the scope by introducing the Shifted-Invert Arnoldi Method as a nuanced approach for dealing with system stability, and we looked at how counting positive eigenvalues can offer significant insights into system characteristics.
+
 \printbibliography
 \end{document}
