@@ -26,4 +26,4 @@
 \contentsline {subsubsection}{\numberline {5.2.2}Stability of a system}{17}{}%
 \contentsline {subsubsection}{\numberline {5.2.3}Limitation of simple Arnoldi Method}{18}{}%
 \contentsline {subsubsection}{\numberline {5.2.4}Shifted-Invert Arnoldi Method}{18}{}%
-\contentsline {subsubsection}{\numberline {5.2.5}Counting unstable eigenvalues}{22}{}%
+\contentsline {subsubsection}{\numberline {5.2.5}Counting positive eigenvalues}{22}{}%
