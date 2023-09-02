@@ -566,12 +566,21 @@ In the supplementary materials, you will find an implementation of this, called 
 For the Hermite interpolation, several options are possible. First, a routine \texttt{hermite\_interp()} is provided in the supplementary materials, it computed the Hermite interpolation by divided differences. However, I had more precise results with an alternative method proposed by Or Werner, BGU, Israel, based on the Hermite method. In the following, I used the latter approach, the routine is provided in the supplementary material aswell.
 \subsubsection{Implementation}
 From the previous elements, we can construct a routine called \texttt{matrix\_function()} that takes as input a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, and a function $f$. It has extremely simple steps:
-\begin{enumerate}
-    \item Retrieve $\lambda_j$ and $n_i$ from \texttt{hess\_and\_phi()}
-    \item Construct the matrix \texttt{FdF} which is $f$ and its derivatives evaluated at the eigenvalues of $\mathbf{A}$
-    \item Construct the Hermite interpolation of $\mathbf{A}$ with \texttt{hermite\_interp()}
-    \item Evaluate the Hermite interpolation at $\mathbf{A}$, and return the result
-\end{enumerate}
+
+\begin{algorithm2e}
+    \SetAlgoLined
+    \KwData{$\mathbf{A} \in \mathbb{C}^{n \times n}$, $f$ a function}
+    \KwResult{$f(\mathbf{A})$}
+    \caption{Matrix Function}
+    $\lambda_j, n_i \gets$ \texttt{hess\_and\_phi($\mathbf{A}$)}\;
+    $\texttt{FdF} \gets [\lambda_j;f(\lambda_j);f'(\lambda_j);\dots]$ $\forall j$\;
+    $P \gets \texttt{hermitePoly(FdF)}$\;
+    $f(\mathbf{A}) \gets P(\mathbf{A})$
+
+\end{algorithm2e}
+
+Note that line 2 of Alorithm 2 is specific to the function \texttt{hermitePoly}. This function was made outside of the scope of this note, and is provided in the supplementary materials. $n_i$ is the highest useful differentiation level, and is actually computer from the output of \texttt{hess\_and\_phi} by $\max(m)$ where $m$ is an array containing the multiplicity of every eigenvalues of $\mathbf{A}$.
+
 The routine is provided in the supplementary materials.
 \subsubsection{Results}
 In this part, we will compare the performance of our routine \texttt{matrix\_function()} with the built-in \texttt{funm()} function from \texttt{Matlab}. The built-in Matlab function uses a Schur-Parlett algorithm from \cite{davies2003schur}. To compare both methods, we generate three types of matrices of different sizes. More precisely, we will investigate both algorithm's performances on symmetric, diagonal and dense matrices, on the following functions: cosine, sine and exponential.
@@ -617,7 +626,7 @@ In this section, we will implement the matrix-vector product $f(\mathbf{A})\math
     $f \gets \|b\|_2\mathbf{V}f(\mathbf{H})\mathbf{e}_1$\;
 \end{algorithm2e}
 
-Where \texttt{arnoldi()} is the Arnoldi iteration described in algorithm \ref{alg:arnoldi}. This routine is provided in the supplementary materials.
+Where \texttt{arnoldi()} is the Arnoldi iteration described in algorithm 3. This routine is provided in the supplementary materials.
 
 \subsubsection{Results}
 To evaluate the performance of this Matrix-vector product routine, we will test it versus the naive way of doing it in \texttt{Matlab}, meaning computing $f(\mathbf{A})$ explicitely, then multiplying it by $\mathbf{b}$. In our first experiment (figure \ref{fig:comp_fab}), where $\mathbf{A}$ is a large sparse matrix. More specifically it is a graded L-shape pattern from \cite{george1978automatic}. The vector $\mathbf{b}$ is filled with uniformly distributed random coefficients such that $b_i\sim\mathcal{U}(0,1)$. The figure \ref{fig:comp_fab_assignement} shows that for such a setup, the proposed algorithm reaches a relative error equals to numerical precision few iterations afters 20. This means 
@@ -785,7 +794,7 @@ Then $\text{trace}(\text{sgn}(\mathbf{A}))=k_{+}-k_{-}$.
     \end{equation*}
 \end{proof}
 \subsubsection{Stability of a system}
-In this section, we will see how theorem \ref{thm:sign} is a powerful tool for system stability assessment. Let us consider a system modeled by the matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, large and sparse. Say it has $p$ distinct eigenvalues $\lambda_i$, $i=1,\dots,p$. We know that if $\forall i, Re(\lambda_i)<0$, then the system is stable. Using the sign function, it immediately rewrites, if $\forall i, sign(Re(\lambda_i)) = -1$ then the system is stable. From theorem \ref{thm:sign}, we can design an algorithm that counts positive eigenvalues of a system. Obviously, when $n$ is extremely large, computing eigenvalues directly on $\mathbf{A}$ is not an option. Algorithm 3 takes advantage of the properties of Arnoldi method and estimates via Monte-Carlo sampling the number of positive eigenvalues of $\mathbf{A}$.
+In this section, we will see how theorem \ref{thm:sign} is a powerful tool for system stability assessment. Let us consider a system modeled by the matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, large and sparse. Say it has $p$ distinct eigenvalues $\lambda_i$, $i=1,\dots,p$. We know that if $\forall i, Re(\lambda_i)<0$, then the system is stable. Using the sign function, it immediately rewrites, if $\forall i, sign(Re(\lambda_i)) = -1$ then the system is stable. From theorem \ref{thm:sign}, we can design an algorithm that counts positive eigenvalues of a system. Obviously, when $n$ is extremely large, computing eigenvalues directly on $\mathbf{A}$ is not an option. Algorithm 4 takes advantage of the properties of Arnoldi method and estimates via Monte-Carlo sampling the number of positive eigenvalues of $\mathbf{A}$.
 
 \begin{algorithm2e}
     \SetAlgoLined
@@ -832,7 +841,7 @@ Provided with this note, a matrix that has those properties. Using Matlab's \tex
     \label{fig:fullritz}
 \end{figure}
 
-From this observation, we can easily say that with our previous implementation of Arnoldi, it seems unsafe to use Algorithm 3 as a tool to estimate the number of positive eigenvalues. We need to find a way to replace line 5 of Algorithm 3 by a more robust method.
+From this observation, we can easily say that with our previous implementation of Arnoldi, it seems unsafe to use Algorithm 4 as a tool to estimate the number of positive eigenvalues. We need to find a way to replace line 5 of Algorithm 4 by a more robust method.
 
 \subsubsection{Shifted-Invert Arnoldi Method}
 The Shifted-Invert Arnoldi method is a technique that allows for better convergence on ill-conditioned system, given we know some information on the spectrum of $\mathbf{A}$. The whole idea is to combine two ideas that are common to Power Iterations (\cite{saad2011numerical}), namely Shifted Power and Inverted iteration. The idea is fairly simple, instead of applying Arnoldi iterations on $\mathbf{A}$, you will apply it to $(\mathbf{A}-\sigma\mathbf{I})^{-1}$ where $\sigma$ is a shift.
@@ -903,7 +912,7 @@ If we take a look at the convergence of the Ritz Values, similarly as in figure 
     \label{fig:shiftritz_full}
 \end{figure}
 \subsubsection{Counting positive eigenvalues}
-We now have an efficient arnoldi method for ill-conditioned matrices. Let us refine Algorithm 3 using the shifted invert Arnoldi method. To better assess the spectral component of the matrix, we will not use the same approach to define $\sigma$. Instead, $\sigma$ will be defined by a uniformly distributed variable such that $$\sigma\sim\mathcal{U}(lb,ub)$$ with 
+We now have an efficient arnoldi method for ill-conditioned matrices. Let us refine Algorithm 4 using the shifted invert Arnoldi method. To better assess the spectral component of the matrix, we will not use the same approach to define $\sigma$. Instead, $\sigma$ will be defined by a uniformly distributed variable such that $$\sigma\sim\mathcal{U}(lb,ub)$$ with 
 \begin{equation*}
     \begin{cases}
         lb = \mathbb{E}\left[\min(\text{real}(\lambda_i))\right] \\
@@ -928,7 +937,7 @@ This way, the shifted invert will, throughout the iteration, explore the whole s
     $k_+\gets (q+k)/2$
 \end{algorithm2e}
 
-In figure \ref{fig:kp}, we show the comparison between Algorithm 3 and 5. For this case, the maximum dimension of the Krylov subspace $k$ was set at 15, as we saw it provided good spectral approximation using the shifed-invert Arnoldi (figure \ref{fig:shiftritz_full}). The number of samples is fairly low, we vary this number from 1 to 20. 
+In figure \ref{fig:kp}, we show the comparison between Algorithm 4 and 6. For this case, the maximum dimension of the Krylov subspace $k$ was set at 15, as we saw it provided good spectral approximation using the shifed-invert Arnoldi (figure \ref{fig:shiftritz_full}). The number of samples is fairly low, we vary this number from 1 to 20. 
 
 \begin{figure}
     \centering
@@ -942,7 +951,7 @@ In figure \ref{fig:kp}, we show the comparison between Algorithm 3 and 5. For th
         \caption{}
         \label{fig:correct_kp}
     \end{subfigure}
-    \caption{Comparison of the estimation of $k_p$ with Algorithm 3 and 5. We see that Algorithm 3 (figure \ref{fig:wrong_kp}) does not manage to find any positive eigenvalues. It uses the standard Arnoldi method, and we saw previously that it was not converging. Whereas Algorithm 5 (figure \ref{fig:correct_kp}) finds the correct value of $k_p$ very quickly. $\hat{k}_+$ (continuous line) is the estimated value of $k_+$, and $k_+$ (dashed line) is the true value of $k_+$.}
+    \caption{Comparison of the estimation of $k_p$ with Algorithm 4 and 6. We see that Algorithm 4 (figure \ref{fig:wrong_kp}) does not manage to find any positive eigenvalues. It uses the standard Arnoldi method, and we saw previously that it was not converging. Whereas Algorithm 6 (figure \ref{fig:correct_kp}) finds the correct value of $k_p$ very quickly. $\hat{k}_+$ (continuous line) is the estimated value of $k_+$, and $k_+$ (dashed line) is the true value of $k_+$.}
     \label{fig:kp}
 \end{figure}
 
