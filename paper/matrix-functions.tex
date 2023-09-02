@@ -34,6 +34,7 @@
 \newtheorem{definition}{Definition}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{example}{Example}[section]
+\newtheorem{remark}{Remark}[section]
 
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest}
@@ -329,6 +330,57 @@ Firstly, we will define the notion of $\phiAb$, i.e. the minimal polynomial of $
 \end{equation}
 of minimal degree such that $\phiAb(\mathbf{A})\mathbf{b}=\mathbf{0}$. Here $\lambda_1,\ldots,\lambda_k$ are again the eigenvalues of $\mathbf{A}$.
 
+\begin{remark}
+    Given a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, and a vector $\mathbf{b}\in\mathbb{C}^n$, the minimal polynomial $\phiAb$ is not necessarily the same as the minimal polynomial $\phi_{\mathbf{A}}$ of $\mathbf{A}$.
+\end{remark}
+\begin{proof}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$, and $\mathbf{b}\in\mathbb{C}^n$. Let us consider the following matrix:
+    \begin{equation*}
+        \mathbf{A} = \begin{bmatrix}
+            1 & 0 \\
+            0 & 1
+        \end{bmatrix}
+    \end{equation*}
+    with the vector
+    \begin{equation*}
+        \mathbf{b} = \begin{bmatrix}
+            1 \\
+            0
+        \end{bmatrix}
+    \end{equation*}
+    The eigenvalues of $\mathbf{A}$ are $\lambda_1 = 1, \lambda_2 = 1$, and hence the minimal polynomial $\phi_{\mathbf{A}}(t) = (t-1)^2$.
+
+    Now, let's consider $\phiAb$. For this, we need to find the polynomial of minimal degree such that $\phiAb(\mathbf{A})\mathbf{b} = \mathbf{0}$.
+
+    Observing that $(\mathbf{A} - \mathbf{I})\mathbf{b} = \mathbf{0}$, we find that $\phiAb(t) = t - 1$, which is of minimal degree to satisfy the property.
+
+    Clearly, $\phiAb(t) \neq \phi_{\mathbf{A}}(t)$
+\end{proof}
+
+\begin{remark}
+    However, it is possible that $\phiAb = \phi_{\mathbf{A}}$.
+\end{remark}
+\begin{proof}
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$, and $\mathbf{b}\in\mathbb{C}^n$. Let us consider the following matrix:
+    \begin{equation*}
+        \mathbf{A} = \begin{bmatrix}
+            0 & 1 \\
+            0 & 0
+        \end{bmatrix}
+    \end{equation*}
+    With vector
+    \begin{equation*}
+        \mathbf{b} = \begin{bmatrix}
+            1 \\
+            1
+        \end{bmatrix}
+    \end{equation*}
+    The eigenvalues of $\mathbf{A}$ are $\lambda_1 = 0, \lambda_2 = 0$, and hence the minimal polynomial $\phi_{\mathbf{A}}(t) = t^2$.
+
+    Now, let's consider $\phiAb$. We find that $(\mathbf{A}^2)\mathbf{b} = \mathbf{0}$ but $(\mathbf{A})\mathbf{b} \neq \mathbf{0}$, which means that the minimal polynomial that satisfies $\phiAb(\mathbf{A})\mathbf{b} = \mathbf{0}$ is $t^2$.
+
+    Thus $\phiAb(t) = \phi_{\mathbf{A}}(t)$.
+\end{proof}
 %%%%% EXAMPLE WHERE PHIab =/= PHIa %%%%%
 
 \begin{lemma}\label{lem:phiAb}
