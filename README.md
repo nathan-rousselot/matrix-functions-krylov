@@ -37,9 +37,9 @@ For more details, refer to the [document](./paper/matrix-functions.pdf).
 
 To clone this repository, you can run:
 
-\`\`\`bash
+```bash
 git clone https://github.com/nathan-rousselot/matrix-functions-krylov.git
-\`\`\`
+```
 
 ## Usage
 
@@ -58,13 +58,13 @@ The `numerical_experiments/` directory contains Python notebooks and scripts to 
 
 If you use this research or codebase in your work, please cite this repository.
 
-\`\`\`bibtex
+```bibtex
 @article{rousselot2023matrix,
   title={Note on Matrix Functions},
   author={Nathan Rousselot},
   year={2023}
 }
-\`\`\`
+```
 
 ---
 
