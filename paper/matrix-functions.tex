@@ -278,6 +278,11 @@ From this corollary, and from theorem \ref{thm:unicity}, we can confirm our earl
     $$\forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,n_k-1\}: p^{(i)}(\lambda_j)=f^{(i)}(\lambda_j)$$
     of minimal degree. Then we define $f(\mathbf{A})=p(\mathbf{A})$.
 \end{definition}
+This definition is very powerful as it allows us to manipulate any sufficiently differentiable function $f$ evaluated on $\mathbf{A}$ a polynomial in $\mathbf{A}$. We saw from earlier definitions that polynomials were easily defined in matrices, making this property a robust tool for matrix functions computations. It can however become quite expensive, as it requires the entire knowledge of the spectrum of $\mathbf{A}$. Furthermore, Hermite interpolation is a computationally heavy process, especially when going higher order, and this can be understood when looking at its explicit form:
+\begin{equation}
+    p(t) = \sum_{i=1}^s\left[\left(\sum_{j=0}^{n_i-1}\frac{1}{j!}\phi_i^{(j)}(\lambda_i)(t-\lambda_i)^j\right)\prod_{j\neq i}(t-\lambda_j)^{n_j}\right]
+\end{equation}
+This is the so-called Lagrange-Hermite formula. Note the link with minimal polynomial. In conclusion, basing the evaluation of $f(\mathbf{A})$ on definition \ref{def:Hermite} is very flexible, but computationally expensive. Given the matrix functions is not to be evaluated lonely, we will see next strategies to more efficiently evalute $f(\mathbf{A})$.
 %%%%%%% NEED TO COMMENT ON THIS %%%%%%%%
 \section{The matrix-vector product $f(\mathbf{A})\mathbf{b}$}
 \subsection{Introduction}\label{sec:fabintro}
@@ -381,7 +386,6 @@ of minimal degree such that $\phiAb(\mathbf{A})\mathbf{b}=\mathbf{0}$. Here $\la
 
     Thus $\phiAb(t) = \phi_{\mathbf{A}}(t)$.
 \end{proof}
-%%%%% EXAMPLE WHERE PHIab =/= PHIa %%%%%
 
 \begin{lemma}\label{lem:phiAb}
     Let $\mathbf{A}\in \mathbb{C}^{n\times n}$ be a matrix with eigenvalues $\{\lambda_1,\ldots,\lambda_k\}$, and minimal polynomial given by equation~\ref{eq:minimalpoly}. Then for any two polynomials $p_1,p_2$ we have that $p_1(\mathbf{A})\mathbf{b}=p_2(\mathbf{A})\mathbf{b}$ if and only if 
@@ -409,7 +413,6 @@ $$\forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,n_k-1\}: p_1^{(i)}(\lambda_j
     $$\forall j\in\{1,\ldots,k\}:\forall i\in\{0,\ldots,m_k-1\}:p^{(i)}(\lambda_j)=f^{(i)}(\lambda_j)$$
     we have that $f(\mathbf{A})\mathbf{b}=p(\mathbf{A})\mathbf{b}$.
 \end{theorem}
-%%%%% PROVE IT %%%%%
 
 \begin{proof}
     Let $f$ be a function that is at least $\max_k\{m_k-1\}$ times differentiable, and let $p_1$ be its $(m_1,\ldots,m_k)$-Hermite interpolant. Then, by definition \ref{def:Hermite}, we have that 
