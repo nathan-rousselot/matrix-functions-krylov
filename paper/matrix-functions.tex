@@ -187,7 +187,7 @@ Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ be a diagonalizable matrix. That means
         \end{bmatrix}
     \end{equation}        
 \end{theorem}
-This property is very handy, as it allows us to compute matrix functions by simply applying the function to the eigenvalues of the matrix. Computationally, this avoids inverting matrices, and lots of matrix products. However, this property is only valid for diagonalizable matrices. This property puts constraints on $f(\mathbf{A})$, as its eigenvectors must form a basis $\mathbf{F}^n$. Another more practical constraint, that is sufficient but not necessary, is if $\mathbf{A}$ is a full rank matrix, then it is diagonalizable.
+This property is very handy, as it allows us to compute matrix functions by simply applying the function to the eigenvalues of the matrix. Computationally, this avoids inverting matrices, and lots of matrix products. However, this property is only valid for diagonalizable matrices. This puts constraints on $f(\mathbf{A})$, as its eigenvectors must form a basis $\mathbf{F}^n$. Another more practical constraint, that is sufficient but not necessary, is if $\mathbf{A}$ is a full rank matrix, then it is diagonalizable.
 
 \subsubsection*{Defective Matrices}
 In some cases, the matrix $\mathbf{A}$ is not diagonalizable, that means the sum of the dimensions of the eigenspaces is less than $n$, we call that a \textit{Defective Matrix}. In that case, we can generalize the principle of diagonalization using the Jordan canonical form of $\mathbf{A}$:
@@ -442,7 +442,7 @@ The Arnoldi method is a reduction method that allows low-rank approximation of a
     \end{equation}
     with $\mathbf{V}_k\in\mathbb{C}^{n\times k}$ unitary, and $\mathbf{H}_k\in\mathbb{C}^{k\times k}$ upper Hessenberg. That means that $\mathbf{H}_k$ is the orthogonal projection of $\mathbf{A}$ onto the $k$th Krylov subspace $\mathcal{K}_k(\mathbf{A},\mathbf{v_1})$, with $\mathbf{v_1}$ the first column of $\mathbf{V}$.
 \end{definition}
-The Arnoldi method is an iterative method, following this algorithm:
+The Arnoldi method is an iterative method, following Algorithm 1.
 \begin{algorithm2e}
     \SetAlgoLined
     \KwData{$A \in \mathbb{C}^{n \times n}$, $v_1 \in \mathbb{C}^n$ a unit vector in the chosen norm (line 7)}
@@ -501,7 +501,7 @@ Recall the problem is to approximate the matrix-vector product $f(\mathbf{A})\ma
 \end{lemma}
 
 \begin{lemma}\label{lem:arnoldi3}
-    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ and let $\mathbf{V}_k$, $\mathbf{H}_k$ be the matrices computed by the Arnoldi method after $k$ iterations. Then, given $p_{k-1}$ the unique Hermite interpolant of $\mathbf{A}$ w.r.t. $\mathbf{b}$ of degree $k-1$, we have that
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$ and let $\mathbf{V}_k$, $\mathbf{H}_k$ be the matrices computed by the Arnoldi method after $k$ iterations. Then, given $p_{k-1}$ the unique Hermite interpolant of $\mathbf{A}$ \textit{w.r.t.} $\mathbf{b}$ of degree $k-1$, we have that
     \begin{equation}
         \|\mathbf{b}\|_2\mathbf{V}_k f(\mathbf{H}_k)\mathbf{e}_1 = p_{k-1}(\mathbf{A})\mathbf{b}
     \end{equation}
@@ -513,7 +513,7 @@ Recall the problem is to approximate the matrix-vector product $f(\mathbf{A})\ma
     \end{equation*}
     And since 
     \begin{equation*}
-        \|\mathbf{b}\|_2\mathbf{V}_k p_{k-1}(\mathbf{H}_k)\mathbf{e}_1 = \|\mathbf{b}\|_2p_{k-1}(\mathbf{A})\mathbf{q}_1 = p_{k-1}(\mathbf{A})\mathbf{b}
+        \|\mathbf{b}\|_2\mathbf{V}_k p_{k-1}(\mathbf{H}_k)\mathbf{e}_1 = \|\mathbf{b}\|_2p_{k-1}(\mathbf{A})\mathbf{e}_1 = p_{k-1}(\mathbf{A})\mathbf{b}
     \end{equation*}
     We indeed have
     \begin{equation*}
@@ -532,7 +532,7 @@ Recall the problem is to approximate the matrix-vector product $f(\mathbf{A})\ma
     \begin{equation*}
         f(\mathbf{A})\mathbf{b} = p_{m-1}(\mathbf{A})\mathbf{b}
     \end{equation*}
-    With $p_{m-1}$ the unique Hermite interpolant of $\mathbf{A}$ w.r.t. $\mathbf{b}$ of degree $m-1$ with $\deg(\phiAb)= m$. Then, by lemma \ref{lem:arnoldi1}, \ref{lem:arnoldi2} and \ref{lem:arnoldi3}, we have that
+    With $p_{m-1}$ the unique Hermite interpolant of $\mathbf{A}$ \textit{w.r.t.} $\mathbf{b}$ of degree $m-1$ with $\deg(\phiAb)= m$. Then, by lemma \ref{lem:arnoldi1}, \ref{lem:arnoldi2} and \ref{lem:arnoldi3}, we have that
     \begin{equation*}
         f(\mathbf{A})\mathbf{b} = \|\mathbf{b}\|_2\mathbf{V}_m f(\mathbf{H}_m)\mathbf{e}_1
     \end{equation*}
@@ -544,7 +544,7 @@ First, let us consider the computation of $f(\mathbf{A})$. Meaning we put aside 
 \subsubsection{Dependencies}
 We are provided with a function \texttt{hess\_and\_phi()} that computes the Hessenberg reduction of a given matrix and its associated minimal polynomial. It takes as input a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$. It then follows these simple steps:
 \begin{enumerate}
-    \item Compute the Hessenberg reduction of $\mathbf{A}$, i.e. $\mathbf{V}^*\mathbf{A}\mathbf{V} = \mathbf{H}$
+    \item Compute the Hessenberg reduction of $\mathbf{A}$, \textit{i.e.} $\mathbf{V}^*\mathbf{A}\mathbf{V} = \mathbf{H}$
     \item It computes its Jordan Canonical Form from $\mathbf{H}$
     \item It computes the minimal polynomial of $\mathbf{A}$, $\phi_{\mathbf{A}}$ through its Jordan Canonical Form
     \item It returns $\mathbf{V}$, $\mathbf{H}$, $\mathbf{J}$, $\lambda_j$ (the eigenvalues of $\mathbf{A}$) and $n_i$ (the multiplicity of $\lambda_i$ in $\phi_{\mathbf{A}}$) 
@@ -556,13 +556,13 @@ Note that step 2 makes perfect sense, referring the following theorem:
 \begin{proof}
     $\mathbf{V}$ is unitary, hence $\mathbf{A}$ and $\mathbf{H}$ are similar matrices, meaning they have the same eigenvalues. Thus, they share the same Jordan Canonical Form.
 \end{proof}
-To recover the minimal polynomial of $\mathbf{A}$, one simply retrives the $\lambda_j$ and the $n_i$ from the previously described steps, and then compute the polynomial this way:
+To recover the minimal polynomial of $\mathbf{A}$, one simply retrieves the $\lambda_j$ and the $n_i$ from the previously described steps, and then compute the polynomial this way:
 \begin{equation*}
-    \phi_{\mathbf{A}}(t) = \prod_{i=1}^{k}(t-\lambda_k)^{n_i}
+    \phi_{\mathbf{A}}(t) = \prod_{i=1}^{k}(t-\lambda_i)^{n_i}
 \end{equation*}
 In the supplementary materials, you will find an implementation of this, called\\ \texttt{construct\_minimal\_polynomial()}. One quick way to assess if the minimal polynomial is constructed correctly, is to evaluate it at $\mathbf{A}$. Taking the $\ell_2$ norm of the result should be close to zero. Here, with \texttt{test1.mat} (a 5 by 5 matrix), we obtain $\phi_{\mathbf{A}}(\mathbf{A}) = 3.3523e-12$. This is indeed numerically close to zero.
 
-For the Hermite interpolation, several options are possible. First, a routine \texttt{hermite\_interp()} is provided in the supplementary materials, it computed the Hermite interpolation by divided differences. However, I had more precise results with an alternative method proposed by Or Werner, BGU, Israel, based on the Hermite method. In the following, I used the latter approach, the routine is provided in the supplementary material aswell : \texttt{HermitePoly()}.
+For the Hermite interpolation, several options are possible. First, a routine \texttt{hermite\_interp()} is provided in the supplementary materials, it computes the Hermite interpolation by divided differences. However, I had more precise results with an alternative method proposed by Or Werner, BGU, Israel, based on the Hermite method. In the following, I used the latter approach, the routine is provided in the supplementary material aswell : \texttt{HermitePoly()}.
 \subsubsection{Implementation}
 From the previous elements, we can construct a routine called \texttt{matrix\_function()} that takes as input a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, and a function $f$ (Algorithm 2)
 
@@ -599,17 +599,17 @@ In this part, we will compare the performance of our routine \texttt{matrix\_fun
         \caption{}
         \label{fig:comp_exp}
     \end{subfigure}
-    \caption{Measure of performance of the algorithm to compute $f(\mathbf{A})$ according to definition \ref{def:Hermite}. We assume that \cite{davies2003schur} (Schur Parlett) algorithm is correct, and we measure the relative error. We compare the performance of our algorithm on several types of matrices : diagonal (- -), symmetric (-*) and dense (--). Matrix coefficients are randomly filled such that for all non-zero entry: $a_{ij}\sim\mathcal{U}(0,1)$, this ensures $\mathbf{A}$ is full rank. We test it on three different functions : Sine (a), Cosine (b) and Exponenial (c). We note that starting from a certain matrix size, the algorithm lose considerably in performance.}
+    \caption{Measure of performance of the algorithm to compute $f(\mathbf{A})$ according to definition \ref{def:Hermite}. We assume that \cite{davies2003schur} (Schur Parlett) algorithm is correct, and we measure the relative error. We compare the performance of our algorithm on several types of matrices : diagonal (- -), symmetric (-*) and dense (--). Matrix coefficients are randomly filled such that for all non-zero entry: $a_{ij}\sim\mathcal{U}(0,1)$, this ensures $\mathbf{A}$ is full rank. We test it on three different functions : Sine (a), Cosine (b) and Exponenial (c). We note that starting from a certain matrix size, the algorithm loses considerably in performance.}
     \label{fig:comp}
 \end{figure}
 
 Figure \ref{fig:comp} illustrates the result of the measurement of performance of the algorithm. The relative error between \cite{davies2003schur} and our results is computed:
 \begin{equation*}
-    \text{relative error} = \frac{\|f(\mathbf{A})-\texttt{funm}(\mathbf{A},f)\|_2}{\|\texttt{funm}(\mathbf{A},f\|_2}
+    \text{relative error} = \frac{\|f(\mathbf{A})-\texttt{funm}(\mathbf{A},f)\|_2}{\|\texttt{funm}(\mathbf{A},f)\|_2}
 \end{equation*}
-We note that for small matrices ($n\leq 10$), the hermite interpolation approach is precise and has residual error inferior to $10^{-11}$, which is somewhat close to numerical precision (around $10^{-16}$ as we work with double precision). However, starting from a certain matrix size, the algorithm loses considerably in performance: both in precision and in computation time. Interestingly, this behavior is independant to the matrix structure : diagonal, symmetric or dense. It also seem to be independant to the function we are evaluating (though we have slightly lower relative error for the exponential function as depicted in figure \ref{fig:comp_exp}).
+We note that for small matrices ($n\leq 10$), the hermite interpolation approach is precise and has residual error inferior to $10^{-11}$, which is somewhat close to numerical precision (around $10^{-16}$ as we work with double precision). However, starting from a certain matrix size, the algorithm loses considerably in performance: both in precision and in computation time. Interestingly, this behavior is independant to the matrix structure : diagonal, symmetric or dense. It also seems to be independant to the function we are evaluating (though we have slightly lower relative error for the exponential function as depicted in figure \ref{fig:comp_exp}).
 
-We conclude that this algorithm, while being elegant, is quickly inefficient, and lead to both numerical and computational issues, even at small matrix sizes.
+We conclude that this algorithm, while being elegant, is quickly inefficient, and leads to both numerical and computational issues, even at small matrix sizes.
 
 \subsection{Matrix-vector product}
 \subsubsection{Implementation}
@@ -648,7 +648,7 @@ for $k > 20$, and where $\epsilon$ is the machine precision. Note that this resu
     \label{fig:comp_fab}
 \end{figure}
 
-Obviously, this very interesting result lets us think that there is a lot of potential computational gain in evaluating $f(\mathbf{A})\mathbf{b}$ on this smaller Krylov subspace. The computational gain for the problem solved in figure \ref{fig:comp_fab} is described in Table \ref{tab:fab}. We note that for this problem, our method considerably outperforms the naive approach of evaluating $f(\mathbf{A})$ seperately, regardless of the function (though the biggest gain seem to come from the matrix exponential). 
+Obviously, this very interesting result lets us think that there is a lot of potential computational gain in evaluating $f(\mathbf{A})\mathbf{b}$ on this smaller Krylov subspace. The computational gain for the problem solved in figure \ref{fig:comp_fab} is described in Table \ref{tab:fab}. We note that for this problem, our method considerably outperforms the naive approach of evaluating $f(\mathbf{A})$ seperately, regardless of the function (though the biggest gain seems to come from the matrix exponential). 
 
 However, this does not give us any insight about how those two algorithms sacle up or down. To investigate this, we will use the BCSPWR matrix collection (\cite{boisvert1997matrix}). This collection contains matrices of different sizes, and different sparsity patterns. We will test our method against the naive approach on this collection. The results are depicted in Table \ref{tab:fab2}. We notice that for very low dimension ($n < 300$) the naive approach slightly outperforms ours for trigonometric functions. However, for larger matrices, and for the exponential function, working in the Krylov subspace is the way to go. For the largest matrix, where $n=5300$, the naive approach takes half a minute, while our method takes less than a tenth of a second. This is a considerable gain in performance, and could be crucial in some applications. As this margin increases with the matrix size, we can expect our method to be even more efficient for larger matrices. We note the the optimal $k$ is not evolving throughout the matrix dataset, this is most likely due to the fact that given they represent similar data, they must have similar condition numbers.
 
@@ -710,7 +710,7 @@ Note that equation \ref{eq:convectiondiffusion} is a simple case of convection-d
 We notice that the solution (equation \ref{eq:odesolution}) is a simple matrix-vector product $f(\mathbf{A})\mathbf{b}$ where $f() := \exp()$ and $\mathbf{b} = \mathbf{u}_0$. We will use the matrix-vector product routine described in section \ref{sec:fabintro} to compute this solution. We will compare it to the naive approach of computing $f(\mathbf{A})$ explicitely, then multiplying it by $\mathbf{u}_0$.
 \subsubsection{Results}
 
-We observe that once again, working on a much smaller Krylov subspace give machine-precision approximation (figure \ref{fig:ode_comp}). The optimal $k$ found was 27, which should allow for a big speed-up in solving this ODE. Indeed, the naive approach takes 13.54 seconds to compute the solution, whereas when working on this smaller Krylov subspace, for $k$ optimally chosen, it only took 225 milliseconds, this is almost a 60 times speed-up.
+We observe that once again, working on a much smaller Krylov subspace gives machine-precision approximation (figure \ref{fig:ode_comp}). The optimal $k$ found was 27, which should allow for a big speed-up in solving this ODE. Indeed, the naive approach takes 13.54 seconds to compute the solution, whereas when working on this smaller Krylov subspace, for $k$ optimally chosen, it only took 225 milliseconds, this is almost a 60 times speed-up.
 
 \begin{figure}
     \begin{subfigure}[b]{.45\linewidth}
@@ -763,7 +763,7 @@ $$
 Then $\text{trace}(\text{sgn}(\mathbf{A}))=k_{+}-k_{-}$.
 \end{theorem}
 \begin{proof}
-    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$. To stay in a very general scenario, and consider cases where $\mathbf{A}$, let us consider its Jordan Canonical Form :
+    Let $\mathbf{A}\in\mathbb{C}^{n\times n}$. To stay in a very general scenario, and consider cases where $\mathbf{A}$ is defective, let us consider its Jordan Canonical Form :
     \begin{equation*}
         \mathbf{A} = \mathbf{VJV}^{-1}
     \end{equation*} 
@@ -811,7 +811,7 @@ In this section, we will see how theorem \ref{thm:sign} is a powerful tool for s
     $k_+\gets (q+k)/2$
 \end{algorithm2e}
 \subsubsection{Limitation of simple Arnoldi Method}
-In the previous algorithm to compute positive eigenvalues, we assume the function \texttt{arnoldi()} is the Matlab's translation of Algorithm 1, \textit{i.e} Modified Gram-Schmidt Arnoldi method. In this section we will see that the convergence of Arnoldi Method is actually not guaranteed in a reasonable time for all systems. The efficiency of the Arnoldi algorithm is highly correlated to the condition number of the matrix $\mathbf{A}$. We know from experience, that Ritz Value struggle to converge properly where eigenvalues of the matrix are very close to each other.
+In the previous algorithm to compute positive eigenvalues, we assume the function \texttt{arnoldi()} is the Matlab's translation of Algorithm 1, \textit{i.e} Modified Gram-Schmidt Arnoldi method. In this section we will see that the convergence of Arnoldi Method is actually not guaranteed in a reasonable time for all systems. The efficiency of the Arnoldi algorithm is highly correlated to the condition number of the matrix $\mathbf{A}$. We know from experience, that Ritz values struggle to converge properly where eigenvalues of the matrix are very close to each other.
 
 Provided with this note, a matrix that has those properties. Using Matlab's \texttt{eigs} function, we observe that the eigenvalues of $\mathbf{A}$ are clustered and very close to each other (figure \ref{fig:ritz_poor_cond}). This leads ultimately to very slow convergence of the eigenvalues using Arnolid method (figure \ref{fig:sign_difficult_est}). 
 \begin{figure}
@@ -859,7 +859,7 @@ Consequently, we see that a good initialization of $\sigma$ is crucial to the co
 \begin{equation}
     \sigma = \mathbb{E}\left[\frac{\lambda_1+\lambda_2}{2}\right]
 \end{equation}
-where $\lambda_1$ and $\lambda_2$ are the two largest eigenvalues of $\mathbf{A}$ in terms of magnitude. Computationally speaking, the Shifted-Invert procedure looks very heavy, especially considering the inverse operator : inverting such a large matrix is very costly. The good news is that we can take the LU factorization of $(\mathbf{A}-\sigma\mathbf{I})$, and then solve two linear system to compute the inverse. This is much more efficient than inverting the matrix directly. The Shifted-Invert Arnoldi method is described in Algorithm 5.
+where $\lambda_1$ and $\lambda_2$ are the two largest eigenvalues of $\mathbf{A}$ in terms of magnitude. Computationally speaking, the Shifted-Invert procedure looks very heavy, especially considering the inverse operator : inverting such a large matrix is very costly. The good news is that we can take the LU factorization of $(\mathbf{A}-\sigma\mathbf{I})$, and then solve two linear systems to compute the inverse. This is much more efficient than inverting the matrix directly. The Shifted-Invert Arnoldi method is described in Algorithm 5.
 \begin{algorithm2e}
     \SetAlgoLined
     \KwData{$A \in \mathbb{C}^{n \times n}$, $v_1 \in \mathbb{C}^n$ a unit vector in the chosen norm, $\sigma\in\mathbb{C}$}
@@ -881,7 +881,7 @@ where $\lambda_1$ and $\lambda_2$ are the two largest eigenvalues of $\mathbf{A}
     %\label{alg:arnoldi}
     %\label{alg:arnoldi}
 \end{algorithm2e}
-Note that in algorithm 5, $\sigma$ is not recomputed throughout the iterations. One way to potentially fasten the convergence, or to avoid having to define a good $\sigma$ initially (which can be costly) is to recompute $\sigma$ at each iteration (or at each $i$ iteration). A drawback obviously is that it requires to recompute the LU factorization, which is arguabely the most costly operation in Algorithm 4. We will not investigate this further in this note, but it is worth noting that this could be a potential improvement to the algorithm.
+Note that in algorithm 5, $\sigma$ is not recomputed throughout the iterations. One way to potentially fasten the convergence, or to avoid having to define a good $\sigma$ initially (which can be costly) is to recompute $\sigma$ at each iteration (or at each $i$ iteration). A drawback obviously is that it requires to recompute the LU factorization, which is arguabely the most costly operation in Algorithm 5. We will not investigate this further in this note, but it is worth noting that this could be a potential improvement to the algorithm.
 
 If we take a look at the convergence of the Ritz Values, similarly as in figure \ref{fig:fullritz}, we note that with this method, Ritz values converges no matter the matrix (figure \ref{fig:shiftritz_full}), and in much fewer iterations. We note that the final relative error is slightly higher than the machine precision $\epsilon$, and thus is slightly higher than in the regular Arnoldi Method, maybe because there is a numerical bias introduced by the shift and inverse steps. However, the relative error remains very small, around $10^{-14}$.
 
@@ -907,7 +907,7 @@ If we take a look at the convergence of the Ritz Values, similarly as in figure 
         \caption{}
         \label{fig:sign_shift_good}
     \end{subfigure}
-    \caption{Same experiments as in figure \ref{fig:fullritz} using a static $\sigma=\mathbb{E}[(\lambda_1+\lambda_2)/2]$. We see that the convergence is much better than in the previous case, and that the Ritz values converge much faster in both matrices. The well-conditioned matrix (figures \ref{fig:ritz_shift_good} and \ref{fig:sign_shift_good}) also converges, but in much fewer iterations. Finally, wee see that even the very ill-conditioned matrix (figures \ref{fig:ritz_shift_bad} and \ref{fig:sign_shift_bad}) converges in only 20 iterations.}
+    \caption{Same experiments as in figure \ref{fig:fullritz} using a static $\sigma=\mathbb{E}[(\lambda_1+\lambda_2)/2]$. We see that the convergence is much better than in the previous case, and that the Ritz values converge much faster in both matrices. The well-conditioned matrix (figures \ref{fig:ritz_shift_good} and \ref{fig:sign_shift_good}) also converges, but in much fewer iterations. Finally, we see that even the very ill-conditioned matrix (figures \ref{fig:ritz_shift_bad} and \ref{fig:sign_shift_bad}) converges in only 20 iterations.}
     \label{fig:shiftritz_full}
 \end{figure}
 \subsubsection{Counting positive eigenvalues}
@@ -978,7 +978,7 @@ All functions and demonstration files are in the \texttt{src/} folder. Below is 
 \begin{itemize}
     \item \texttt{arnoldi\_convergence($\mathbf{A},K$)} : this is a demonstration script that illustrates the rate of convergence of the Modified Gram-Shmidt Arnoldi method. It takes as input a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$ and a scalar $K$ that defines the maximum Krylov subspace dimension. It then plots the convergence of Arnoldi in function of the subspace dimension.
     \item \texttt{arnoldi\_iteration($\mathbf{A},\mathbf{v}_1,k$)} : this is the Modified Gram-Schmidt Arnoldi method as described in Algorithm 1. It takes as input a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, a vector $\mathbf{v}_1\in\mathbb{C}^n$ which should already satisfy $\|\mathbf{v}_1\|_2 = 1$ and a scalar $k$ that defines the dimension of the Krylov subspace such that $\mathcal{K}_k(\mathbf{A},\mathbf{v}_1) = \dots$. It returns two matrices $\mathbf{H}$ and $\mathbf{V}$ corresponding to the Hessenberg reduction of rank $k$ of $\mathbf{A}$
-    \item \texttt{compute\_kp($\mathbf{A},k,N,lb,ub$)} : function that use a Monte-Carlo like method to estimate the number of positive eigenvalues in the matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$. $k$ is the dimension of the considered Krylov Subspace, $N$ is the number of samples, $lb,ub$ are the lower and uper bounds of the uniform distribution associated with $\sigma\sim\mathcal{U}(lb,ub)$. The function returns a scalar $kp$, the estimated positive eigenvalues.
+    \item \texttt{compute\_kp($\mathbf{A},k,N,lb,ub$)} : function that uses a Monte-Carlo like method to estimate the number of positive eigenvalues in the matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$. $k$ is the dimension of the considered Krylov Subspace, $N$ is the number of samples, $lb,ub$ are the lower and uper bounds of the uniform distribution associated with $\sigma\sim\mathcal{U}(lb,ub)$. The function returns a scalar $kp$, the estimated positive eigenvalues.
     \item \texttt{convection\_diffusion()} : a standalone script that demonstrates the efficiency of the matrix-vector estimate. Illustrates the Convection-Diffusion problem.
     \item \texttt{demo\_compute\_kp($\mathbf{A},N,k$)} : demonstration function to illustrate the convergence (Monte-Carlo wise) of \texttt{compute\_kp}. It plots the convergence of the method with reference to the actual number of positive eigenvalues. It takes as input a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, a scalar $N$ that is the maximum number of Monte-Carlo sampling, and $k$ the considered Krylov subspace's dimension.
     \item \texttt{fAb($fun, \mathbf{A},\mathbf{b},k$)} : function that computationally efficiently evaluates $f(\mathbf{A})\mathbf{b}$ with $\mathbf{A}\in\mathbb{C}^{n\times n}$, $b\in\mathbb{C}^{n\times n}$. $fun$ is a function handle, and $k$ is the dimension of the Krylov subspace. It returns a vector $\mathbf{f}$.
@@ -986,9 +986,9 @@ All functions and demonstration files are in the \texttt{src/} folder. Below is 
     \item \texttt{generate\_symmetric\_matrices($n$)} a function that takes a scalar $n$ as input and outputs a matrix $\mathbf{A}\in\mathbb{R}^{n\times n}$ symmetric whose non-zero entries $a_{ij}\sim\mathcal{U}(0,1)$
     \item \texttt{matrix\_function($fun, \mathbf{A}$)} : a function that evaluates a given function handle $fun$ at the matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$. It uses Hermite Interpolation method as per definition \ref{def:Hermite}. It outputs a matrix $\mathbf{F}\in\mathbb{C}^{n\times n}$. Note that this function converts the input handle in symbolic representation. The entire purpose of the function is then to properly form the input for the Hermite Interpolation.
     \item \texttt{shifted\_arnoldi\_convergence($\mathbf{A},K$)} : this is a demonstration script that illustrates the rate of convergence of the Shifted-Invert Modified Gram-Shmidt Arnoldi method. It takes as input a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$ and a scalar $K$ that defines the maximum Krylov subspace dimension. It then plots the convergence of Arnoldi in function of the subspace dimension. Please note that $\sigma$ is not in the input, and is by default computed within the function such that $\sigma=\mathbb{E}[(\lambda_1+\lambda_2)/2]$. The function also plots the Ritz values with eigenvalues (the six biggest in terms of magnitude) to visually verify if Ritz values have converged.
-    \item \texttt{shifted\_arnoldi\_iteration($\mathbf{A},\mathbf{v}_1,k,\sigma$)} : this is the Shited-Invert Modified Gram-Schmidt Arnoldi method as described in Algorithm 1. It takes as input a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, a vector $\mathbf{v}_1\in\mathbb{C}^n$ which should already satisfy $\|\mathbf{v}_1\|_2 = 1$ and a scalar $k$ that defines the dimension of the Krylov subspace such that $\mathcal{K}_k(\mathbf{A},\mathbf{v}_1) = \dots$. It also takes as input the initial shift $\sigma$. It uses computational efficient inversion by computing the LU factorization of $\mathbf{A}$ before proceeding to the inversion. It returns two matrices $\mathbf{H}$ and $\mathbf{V}$ corresponding to the Hessenberg reduction of rank $k$ of $\mathbf{A}$. It also returns $\sigma$, to track any change of $\sigma$. Note that this last output is currently of no use as for the proposed implementation, $\sigma$ is not changed throughout the iterations. Though only few lines of codes need to be changed for that to happen, in which case the output link is already done.
+    \item \texttt{shifted\_arnoldi\_iteration($\mathbf{A},\mathbf{v}_1,k,\sigma$)} : this is the Shifted-Invert Modified Gram-Schmidt Arnoldi method as described in Algorithm 1. It takes as input a matrix $\mathbf{A}\in\mathbb{C}^{n\times n}$, a vector $\mathbf{v}_1\in\mathbb{C}^n$ which should already satisfy $\|\mathbf{v}_1\|_2 = 1$ and a scalar $k$ that defines the dimension of the Krylov subspace such that $\mathcal{K}_k(\mathbf{A},\mathbf{v}_1) = \dots$. It also takes as input the initial shift $\sigma$. It uses computational efficient inversion by computing the LU factorization of $\mathbf{A}$ before proceeding to the inversion. It returns two matrices $\mathbf{H}$ and $\mathbf{V}$ corresponding to the Hessenberg reduction of rank $k$ of $\mathbf{A}$. It also returns $\sigma$, to track any change of $\sigma$. Note that this last output is currently of no use as for the proposed implementation, $\sigma$ is not changed throughout the iterations. Though only few lines of codes need to be changed for that to happen, in which case the output link is already done.
     \item \texttt{test1()} : this is a standalone script that demonstrates the efficiency and limitations of \texttt{matrix\_function}. In other words, it successively tries different function handles, namely $\cos, \sin$ and $\exp$ on a given matrix (\texttt{test1.mat}), then on differently structured random matrices. 
-    \item \texttt{test\_fab()} : this is a standalone scipt that demonstrates the efficiency and limitations of \texttt{fAb}. It successively tries different function handles, namely $\cos, \sin$ and $\exp$ on a given matrix. The vector $\mathbf{b}$ is automatically and randomly generated such that $b_i\sim\mathcal{U}(0,1)$. The matrix on which the script is executed is to be set manually on line 9. 
+    \item \texttt{test\_fab()} : this is a standalone script that demonstrates the efficiency and limitations of \texttt{fAb}. It successively tries different function handles, namely $\cos, \sin$ and $\exp$ on a given matrix. The vector $\mathbf{b}$ is automatically and randomly generated such that $b_i\sim\mathcal{U}(0,1)$. The matrix on which the script is executed is to be set manually on line 9. 
 \end{itemize}
 Those functions and scripts have been conceived specifically for this note. Obviousy, they have dependencies written by other engineers or scientists. Those dependencies are included in the repository, though we do not document them.
 
